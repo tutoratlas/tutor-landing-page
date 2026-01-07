@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Google Fonts for TutorAtlas */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -43,74 +46,76 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
+  /* TutorAtlas Brand Colors */
+  --primary: #3B4A5C; /* Warm slate-blue */
+  --primary-foreground: #F8F7F5; /* Off-white */
+  --sidebar-primary: #3B4A5C;
+  --sidebar-primary-foreground: #F8F7F5;
+  --chart-1: #D4A574; /* Amber */
+  --chart-2: #A8B8A8; /* Sage */
+  --chart-3: #3B4A5C;
+  --chart-4: #2C3E50;
+  --chart-5: #1A2332;
   --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  --background: #F8F7F5; /* Off-white background */
+  --foreground: #2C3E50; /* Dark slate for text */
+  --card: #FFFFFF; /* White cards */
+  --card-foreground: #2C3E50;
+  --popover: #FFFFFF;
+  --popover-foreground: #2C3E50;
+  --secondary: #D4A574; /* Amber accent */
+  --secondary-foreground: #FFFFFF;
+  --muted: #E8E6E1; /* Light gray */
+  --muted-foreground: #7A8A9A; /* Medium gray */
+  --accent: #D4A574; /* Amber */
+  --accent-foreground: #FFFFFF;
+  --destructive: #E74C3C;
+  --destructive-foreground: #FFFFFF;
+  --border: #E8E6E1;
+  --input: #FFFFFF;
+  --ring: #D4A574;
+  --sidebar: #F8F7F5;
+  --sidebar-foreground: #2C3E50;
+  --sidebar-accent: #D4A574;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #E8E6E1;
+  --sidebar-ring: #D4A574;
 }
 
 .dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  /* Dark mode uses same TutorAtlas colors for consistency */
+  --primary: #3B4A5C;
+  --primary-foreground: #F8F7F5;
+  --sidebar-primary: #3B4A5C;
+  --sidebar-primary-foreground: #F8F7F5;
+  --background: #1A2332;
+  --foreground: #F8F7F5;
+  --card: #2C3E50;
+  --card-foreground: #F8F7F5;
+  --popover: #2C3E50;
+  --popover-foreground: #F8F7F5;
+  --secondary: #D4A574;
+  --secondary-foreground: #1A2332;
+  --muted: #3B4A5C;
+  --muted-foreground: #B8C8D8;
+  --accent: #D4A574;
+  --accent-foreground: #1A2332;
+  --destructive: #E74C3C;
+  --destructive-foreground: #FFFFFF;
+  --border: #3B4A5C;
+  --input: #2C3E50;
+  --ring: #D4A574;
+  --chart-1: #D4A574;
+  --chart-2: #A8B8A8;
+  --chart-3: #3B4A5C;
+  --chart-4: #2C3E50;
+  --chart-5: #1A2332;
+  --sidebar: #2C3E50;
+  --sidebar-foreground: #F8F7F5;
+  --sidebar-accent: #D4A574;
+  --sidebar-accent-foreground: #1A2332;
+  --sidebar-border: #3B4A5C;
+  --sidebar-ring: #D4A574;
 }
 
 @layer base {
@@ -118,7 +123,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
