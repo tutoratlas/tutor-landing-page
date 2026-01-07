@@ -187,18 +187,21 @@ export default function Home() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                <a href="#join" className="inline-block">
-                  <Button size="lg" className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground">
-                    Join Early Access
-                  </Button>
-                </a>
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto border-primary text-primary hover:bg-primary/10"
+                  className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground"
                 >
                   Book a 15-min Interview
                 </Button>
+                <a href="#join" className="inline-block">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto border-primary text-primary hover:bg-primary/10"
+                  >
+                    Join Early Access
+                  </Button>
+                </a>
               </div>
 
               <p className="text-xs text-muted-foreground pt-4">

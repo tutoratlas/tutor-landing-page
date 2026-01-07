@@ -27,3 +27,4 @@
 
 ## New Tasks
 - [x] Fix hero section placeholder - replace white square with actual visual content
+- [x] Update hero CTA to make "Book a 15-min Interview" the primary button text
