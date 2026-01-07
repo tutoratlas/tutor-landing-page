@@ -206,9 +206,15 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Hero Image Placeholder */}
+            {/* Hero Image */}
             <div className="hidden md:block">
-              <div className="aspect-square rounded-2xl bg-white/60 backdrop-blur-sm border border-border/50"></div>
+              <div className="aspect-square rounded-2xl overflow-hidden border border-border/50 shadow-lg">
+                <img
+                  src="/images/solution-illustration.jpg"
+                  alt="TutorAtlas workspace illustration"
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>

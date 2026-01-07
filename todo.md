@@ -24,3 +24,6 @@
 ## Pending Features
 - [x] Custom domain configuration (tutoratlas.manus.space)
 - [ ] Final checkpoint and deployment
+
+## New Tasks
+- [x] Fix hero section placeholder - replace white square with actual visual content
