@@ -286,8 +286,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-6">
+            <div className="grid md:grid-cols-3 gap-6 items-start">
+              <div className="md:col-span-1 space-y-6">
                 <div className="flex gap-4">
                   <div className="shrink-0">
                     <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -345,24 +345,30 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-full max-w-[280px] md:max-w-[320px] rounded-xl overflow-hidden shadow-lg">
-                  <img
-                    src="/images/telegram-blast-screenshot.png"
-                    alt="Telegram tuition assignment blasts showing 60+ messages"
-                    className="w-full h-auto"
-                  />
+              <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col items-center">
+                  <div className="w-full max-w-[280px] rounded-xl overflow-hidden shadow-lg">
+                    <img
+                      src="/images/telegram-blast-screenshot.png"
+                      alt="Telegram tuition assignment blasts showing 60+ messages"
+                      className="w-full h-auto"
+                    />
+                  </div>
                 </div>
-                <div className="w-full max-w-[280px] md:max-w-[320px] rounded-xl overflow-hidden shadow-lg">
-                  <img
-                    src="/images/google-form-screenshot.png"
-                    alt="Typical Google Form requiring repetitive data entry"
-                    className="w-full h-auto"
-                  />
+                <div className="flex flex-col items-center">
+                  <div className="w-full max-w-[280px] rounded-xl overflow-hidden shadow-lg">
+                    <img
+                      src="/images/google-form-screenshot.png"
+                      alt="Typical Google Form requiring repetitive data entry"
+                      className="w-full h-auto"
+                    />
+                  </div>
                 </div>
-                <p className="text-xs text-center text-muted-foreground italic max-w-[320px]">
-                  The current reality: high volume, low signal, zero transparency
-                </p>
+                <div className="sm:col-span-2 text-center">
+                  <p className="text-xs text-muted-foreground italic">
+                    The current reality: high volume, low signal, zero transparency
+                  </p>
+                </div>
               </div>
             </div>
           </div>
