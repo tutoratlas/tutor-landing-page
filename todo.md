@@ -85,3 +85,8 @@
 - [x] Reorganize Pain Reality section to display both screenshots side-by-side
 - [x] Ensure responsive layout for mobile devices
 - [x] Test and save checkpoint (all 12 tests passing)
+
+## Payment Terminology Update
+- [x] Change "Commission & Terms" to "Payment & Terms Transparency"
+- [x] Update copy to emphasize payment chasing and payment transparency
+- [x] Test and save checkpoint (all 12 tests passing)

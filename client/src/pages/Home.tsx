@@ -433,19 +433,19 @@ export default function Home() {
                 <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
                   <Star className="h-6 w-6 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold">Terms & Commission Transparency</h3>
+                <h3 className="text-xl font-semibold">Payment & Terms Transparency</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>See fee/commission rules before you apply</span>
+                    <span>See payment terms and any fees/commissions upfront</span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>"Net hourly" estimator (after commute + any stated fee)</span>
+                    <span>"Net hourly" estimator (after commute + any stated fees)</span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Know the deal before you invest your time</span>
+                    <span>Know payment expectations before chasing for your money</span>
                   </li>
                 </ul>
               </div>
