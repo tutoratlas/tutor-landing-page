@@ -345,15 +345,24 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="bg-muted/50 rounded-xl p-6 border-2 border-dashed flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    [Screenshot placeholder: Telegram assignment blast → Google Form link]
-                  </p>
-                  <p className="text-xs text-muted-foreground italic">
-                    The current reality: high volume, low signal, zero transparency
-                  </p>
+              <div className="space-y-4">
+                <div className="rounded-xl overflow-hidden shadow-lg">
+                  <img
+                    src="/images/telegram-blast-screenshot.png"
+                    alt="Telegram tuition assignment blasts showing 60+ messages"
+                    className="w-full h-auto"
+                  />
                 </div>
+                <div className="rounded-xl overflow-hidden shadow-lg">
+                  <img
+                    src="/images/google-form-screenshot.png"
+                    alt="Typical Google Form requiring repetitive data entry"
+                    className="w-full h-auto"
+                  />
+                </div>
+                <p className="text-xs text-center text-muted-foreground italic">
+                  The current reality: high volume, low signal, zero transparency
+                </p>
               </div>
             </div>
           </div>
