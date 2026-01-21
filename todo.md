@@ -90,3 +90,9 @@
 - [x] Change "Commission & Terms" to "Payment & Terms Transparency"
 - [x] Update copy to emphasize payment chasing and payment transparency
 - [x] Test and save checkpoint (all 12 tests passing)
+
+## Testimonial Section
+- [x] Read tutor interview transcripts (Glo, Jeriel, Priscilla)
+- [x] Extract verbatim quotes about commuting, payments, and scheduling
+- [x] Create testimonial section below founding cohort
+- [x] Test and save checkpoint (all 12 tests passing)

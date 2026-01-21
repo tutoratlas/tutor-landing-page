@@ -995,6 +995,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Testimonials Section */}
+      <section className="py-20 bg-background">
+        <div className="container">
+          <div className="max-w-5xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">What tutors are saying</h2>
+              <p className="text-xl text-muted-foreground">
+                Real pain points from Singapore home tutors
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Payment Chasing - Glo */}
+              <div className="bg-card p-8 rounded-lg border space-y-4">
+                <div className="text-4xl text-primary">"</div>
+                <blockquote className="text-lg leading-relaxed">
+                  I think that's the biggest pain point. Scheduling is like second, but first would be payments. Last time I used to be like, okay, wait till the end of the month, then it's got everything. And then sometimes I'll have parents be like, oh, we didn't have class on this day. And I'm like, huh? You know, that kind.
+                </blockquote>
+                <div className="pt-4 border-t">
+                  <p className="font-medium">Full-time English & Math tutor in her 30s</p>
+                  <p className="text-sm text-muted-foreground">10 years of experience</p>
+                </div>
+              </div>
+
+              {/* Commuting - Jeriel */}
+              <div className="bg-card p-8 rounded-lg border space-y-4">
+                <div className="text-4xl text-primary">"</div>
+                <blockquote className="text-lg leading-relaxed">
+                  Tutors work 10 hours a day traveling between student locations, but matching agencies only provide postal codes and assignment IDs with little indication of actual geographic locations. If the commute is too long or assignments are in different regions, tutors are less likely to accept unless there's sufficient buffer time between lessons.
+                </blockquote>
+                <div className="pt-4 border-t">
+                  <p className="font-medium">Full-time tutor in his 20s</p>
+                  <p className="text-sm text-muted-foreground">Multiple subjects across primary to JC</p>
+                </div>
+              </div>
+
+              {/* Scheduling/Lateness - Priscilla */}
+              <div className="bg-card p-8 rounded-lg border space-y-4">
+                <div className="text-4xl text-primary">"</div>
+                <blockquote className="text-lg leading-relaxed">
+                  Cannot guarantee leaving work on time, leading to late arrivals for lessons. Some locations have inconvenient bus access. High student churn requires constant reapplication process. Priority is supplementing income for buying a house.
+                </blockquote>
+                <div className="pt-4 border-t">
+                  <p className="font-medium">Part-time English, Math & Science tutor in her 30s</p>
+                  <p className="text-sm text-muted-foreground">Tutoring since 2017 while working full-time</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional context about tuition centers */}
+            <div className="bg-muted/50 p-8 rounded-lg border-l-4 border-primary">
+              <p className="text-lg leading-relaxed italic">
+                "Parents compare private tutors to large centers like Learning Lab and Leo Mighty. Centers charge similar rates but provide more materials. Tuition centers are seen as a threat due to staffing and resource advantages, but private tutoring's advantage is personalization and mentorship. It's tough to raise or amend hourly rates later once you've started with a student."
+              </p>
+              <p className="mt-4 text-sm text-muted-foreground">— Full-time tutor reflecting on competition from tuition centers</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 bg-background border-t">
         <div className="container">
