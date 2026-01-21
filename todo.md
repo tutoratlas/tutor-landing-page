@@ -104,3 +104,13 @@
 - [x] Paraphrase tuition center competition quote
 - [x] Update section subtitle from "Real pain points" to "Common challenges"
 - [x] Test and verify all 12 tests passing
+
+## Page Structure Reorganization
+- [x] Move testimonials section to appear before FAQ (after outcomes section)
+- [x] Add CTA button after hero section (already existed)
+- [x] Add CTA button after problem section
+- [x] Add CTA button after outcomes section
+- [x] Add CTA button after testimonials section
+- [x] Ensure all CTA buttons scroll smoothly to the founding cohort form
+- [x] Test page flow and button functionality (all 12 tests passing)
+- [x] Save checkpoint

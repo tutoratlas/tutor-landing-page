@@ -371,6 +371,19 @@ export default function Home() {
                 </div>
               </div>
             </div>
+
+            {/* CTA after pain reality */}
+            <div className="text-center pt-8">
+              <Button
+                size="lg"
+                onClick={() => {
+                  document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
+              >
+                Join Early Access
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -601,12 +614,98 @@ export default function Home() {
                 </p>
               </div>
             </div>
+
+            {/* CTA after outcomes */}
+            <div className="text-center pt-8">
+              <Button
+                size="lg"
+                onClick={() => {
+                  document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
+              >
+                Join Early Access
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-background">
+        <div className="container">
+          <div className="max-w-5xl mx-auto space-y-12">
+              <div className="text-center space-y-4">
+                <h2 className="text-3xl md:text-4xl font-bold">What tutors are saying</h2>
+                <p className="text-xl text-muted-foreground">
+                  Common challenges from Singapore home tutors
+                </p>
+              </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Payment Chasing - Glo */}
+              <div className="bg-card p-8 rounded-lg border space-y-4">
+                <div className="text-4xl text-primary">"</div>
+                <blockquote className="text-lg leading-relaxed">
+                  Chasing payments is my biggest headache. I track everything carefully, but parents sometimes dispute which lessons happened. It's exhausting to reconcile at month-end.
+                </blockquote>
+                <div className="pt-4 border-t">
+                  <p className="font-medium">Full-time English & Math tutor in her 30s</p>
+                  <p className="text-sm text-muted-foreground">10 years of experience</p>
+                </div>
+              </div>
+
+              {/* Commuting - Jeriel */}
+              <div className="bg-card p-8 rounded-lg border space-y-4">
+                <div className="text-4xl text-primary">"</div>
+                <blockquote className="text-lg leading-relaxed">
+                  I spend half my day traveling between students. Agencies give postal codes, but I can't tell if locations are actually close until I map them out. Long commutes eat into my earnings.
+                </blockquote>
+                <div className="pt-4 border-t">
+                  <p className="font-medium">Full-time tutor in his 20s</p>
+                  <p className="text-sm text-muted-foreground">Multiple subjects across primary to JC</p>
+                </div>
+              </div>
+
+              {/* Scheduling/Lateness - Priscilla */}
+              <div className="bg-card p-8 rounded-lg border space-y-4">
+                <div className="text-4xl text-primary">"</div>
+                <blockquote className="text-lg leading-relaxed">
+                  My day job runs late sometimes, making me rush to evening lessons. When students drop out, I'm back to filling forms and applying all over again.
+                </blockquote>
+                <div className="pt-4 border-t">
+                  <p className="font-medium">Part-time English, Math & Science tutor in her 30s</p>
+                  <p className="text-sm text-muted-foreground">Tutoring since 2017 while working full-time</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional context about tuition centers */}
+            <div className="bg-muted/50 p-8 rounded-lg border-l-4 border-primary">
+              <p className="text-lg leading-relaxed italic">
+                "Parents compare us to big tuition centers that have more resources and materials. It's hard to compete on price, and once you set a rate with a student, it's awkward to raise it later. Our edge is personalization, but we need to communicate that value better."
+              </p>
+              <p className="mt-4 text-sm text-muted-foreground">— Full-time tutor on competing with tuition centers</p>
+            </div>
+
+            {/* CTA after testimonials */}
+            <div className="text-center pt-8">
+              <Button
+                size="lg"
+                onClick={() => {
+                  document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
+              >
+                Join Early Access
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Credibility Section */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-muted/30">
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
@@ -643,7 +742,7 @@ export default function Home() {
       </section>
 
       {/* Founding Cohort Section */}
-      <section id="cohort" className="py-20 bg-muted/30">
+      <section id="cohort" className="py-20 bg-background">
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
@@ -695,7 +794,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-background">
+      <section id="faq" className="py-20 bg-muted/30">
         <div className="container">
           <div className="max-w-3xl mx-auto space-y-12">
             <div className="text-center space-y-4">
@@ -995,65 +1094,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-background">
-        <div className="container">
-          <div className="max-w-5xl mx-auto space-y-12">
-              <div className="text-center space-y-4">
-                <h2 className="text-3xl md:text-4xl font-bold">What tutors are saying</h2>
-                <p className="text-xl text-muted-foreground">
-                  Common challenges from Singapore home tutors
-                </p>
-              </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Payment Chasing - Glo */}
-              <div className="bg-card p-8 rounded-lg border space-y-4">
-                <div className="text-4xl text-primary">"</div>
-                <blockquote className="text-lg leading-relaxed">
-                  Chasing payments is my biggest headache. I track everything carefully, but parents sometimes dispute which lessons happened. It's exhausting to reconcile at month-end.
-                </blockquote>
-                <div className="pt-4 border-t">
-                  <p className="font-medium">Full-time English & Math tutor in her 30s</p>
-                  <p className="text-sm text-muted-foreground">10 years of experience</p>
-                </div>
-              </div>
-
-              {/* Commuting - Jeriel */}
-              <div className="bg-card p-8 rounded-lg border space-y-4">
-                <div className="text-4xl text-primary">"</div>
-                <blockquote className="text-lg leading-relaxed">
-                  I spend half my day traveling between students. Agencies give postal codes, but I can't tell if locations are actually close until I map them out. Long commutes eat into my earnings.
-                </blockquote>
-                <div className="pt-4 border-t">
-                  <p className="font-medium">Full-time tutor in his 20s</p>
-                  <p className="text-sm text-muted-foreground">Multiple subjects across primary to JC</p>
-                </div>
-              </div>
-
-              {/* Scheduling/Lateness - Priscilla */}
-              <div className="bg-card p-8 rounded-lg border space-y-4">
-                <div className="text-4xl text-primary">"</div>
-                <blockquote className="text-lg leading-relaxed">
-                  My day job runs late sometimes, making me rush to evening lessons. When students drop out, I'm back to filling forms and applying all over again.
-                </blockquote>
-                <div className="pt-4 border-t">
-                  <p className="font-medium">Part-time English, Math & Science tutor in her 30s</p>
-                  <p className="text-sm text-muted-foreground">Tutoring since 2017 while working full-time</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Additional context about tuition centers */}
-            <div className="bg-muted/50 p-8 rounded-lg border-l-4 border-primary">
-              <p className="text-lg leading-relaxed italic">
-                "Parents compare us to big tuition centers that have more resources and materials. It's hard to compete on price, and once you set a rate with a student, it's awkward to raise it later. Our edge is personalization, but we need to communicate that value better."
-              </p>
-              <p className="mt-4 text-sm text-muted-foreground">— Full-time tutor on competing with tuition centers</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-12 bg-background border-t">
