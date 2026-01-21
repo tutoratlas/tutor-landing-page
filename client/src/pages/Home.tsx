@@ -13,9 +13,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Link } from "wouter";
-import { CONTACT_EMAIL, PAIN_POINTS, FEATURES } from "@/lib/config";
-import { ChevronDown, Mail, MessageCircle, CheckCircle2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { CONTACT_EMAIL } from "@/lib/config";
+import { ChevronDown, Mail, MessageCircle, CheckCircle2, Clock, MapPin, Star } from "lucide-react";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -35,6 +35,34 @@ export default function Home() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [selectedPersona, setSelectedPersona] = useState<"part-time" | "full-time" | "centre">("part-time");
+
+  const submitFormMutation = trpc.form.submit.useMutation({
+    onSuccess: () => {
+      setFormSubmitted(true);
+      toast.success("Thank you! We'll be in touch within 48 hours.");
+      setTimeout(() => {
+        setFormData({
+          name: "",
+          whatsapp: "",
+          email: "",
+          teachingFormat: "",
+          weeklyHours: "",
+          commuteHours: "",
+          biggestPain: "",
+          subjects: "",
+          optionalNotes: "",
+          interviewOptIn: false,
+          willingnessToPayOptIn: false,
+          receiveUpdates: false,
+        });
+        setFormSubmitted(false);
+      }, 3000);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong. Please try again.");
+    },
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -58,132 +86,106 @@ export default function Home() {
     return true;
   };
 
-  const submitFormMutation = trpc.form.submit.useMutation({
-    onSuccess: () => {
-      setFormSubmitted(true);
-      toast.success("Thank you! We'll be in touch soon.");
-
-      // Reset form after 2 seconds
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          whatsapp: "",
-          email: "",
-          teachingFormat: "",
-          weeklyHours: "",
-          commuteHours: "",
-          biggestPain: "",
-          subjects: "",
-          optionalNotes: "",
-          interviewOptIn: false,
-          willingnessToPayOptIn: false,
-          receiveUpdates: false,
-        });
-        setFormSubmitted(false);
-      }, 2000);
-    },
-    onError: (error) => {
-      toast.error(error.message || "Something went wrong. Please try again.");
-    },
-  });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
     setIsSubmitting(true);
-
     try {
-      await submitFormMutation.mutateAsync({
-        name: formData.name,
-        whatsapp: formData.whatsapp,
-        email: formData.email,
-        teachingFormat: formData.teachingFormat,
-        weeklyHours: formData.weeklyHours,
-        commuteHours: formData.commuteHours,
-        biggestPain: formData.biggestPain,
-        subjects: formData.subjects,
-        optionalNotes: formData.optionalNotes,
-        interviewOptIn: formData.interviewOptIn,
-        willingnessToPayOptIn: formData.willingnessToPayOptIn,
-        receiveUpdates: formData.receiveUpdates,
-      });
+      await submitFormMutation.mutateAsync(formData);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const personaContent = {
+    "part-time": {
+      subhead: "Limited time windows. Location-constrained. Every hour counts.",
+      benefits: [
+        "Find the 3 suitable assignments from 60 daily Telegram blasts",
+        "Know commute fit instantly—no more manual postal code mapping",
+        "Stop getting ghosted after repetitive form submissions"
+      ],
+      target: "Target: Cut lead sifting time by 50–80%"
+    },
+    "full-time": {
+      subhead: "Multi-stop days dominated by travel. Route planning is critical.",
+      benefits: [
+        "See commute-fit and route viability before you apply",
+        "One-tap apply without retyping your profile every time",
+        "Track application status instead of wondering if it's still open"
+      ],
+      target: "Target: Reduce application time to <60 seconds per lead"
+    },
+    "centre": {
+      subhead: "Owner-operator juggling teaching + enquiries + scheduling + admin.",
+      benefits: [
+        "Capture enquiries and schedule trials with fewer message loops (pilot)",
+        "See your week's timetable at a glance, including reschedules (pilot)",
+        "Standardize parent updates so quality scales beyond you (pilot)"
+      ],
+      target: "Target: Reduce parent coordination time by 30–50% (pilot)"
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Sticky Header Navigation */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-border">
-        <div className="container py-4 flex items-center justify-between">
-          <div className="text-xl font-bold text-primary">TutorAtlas</div>
-          <nav className="hidden md:flex gap-8 items-center">
-            <a href="#solution" className="text-sm hover:text-primary transition-colors">
+    <div className="min-h-screen flex flex-col bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img 
+              src="/images/tutoratlas_logo_horizontal.png" 
+              alt="TutorAtlas" 
+              className="h-8"
+            />
+          </div>
+          <nav className="hidden md:flex gap-6">
+            <a href="#solution" className="text-sm font-medium hover:text-primary transition-colors">
               Solution
             </a>
-            <a href="#features" className="text-sm hover:text-primary transition-colors">
+            <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
               Features
             </a>
-            <a href="#outcomes" className="text-sm hover:text-primary transition-colors">
+            <a href="#outcomes" className="text-sm font-medium hover:text-primary transition-colors">
               Outcomes
             </a>
-            <a href="#founding-cohort" className="text-sm hover:text-primary transition-colors">
+            <a href="#cohort" className="text-sm font-medium hover:text-primary transition-colors">
               Founding Cohort
             </a>
-            <a href="#faq" className="text-sm hover:text-primary transition-colors">
+            <a href="#faq" className="text-sm font-medium hover:text-primary transition-colors">
               FAQ
             </a>
-            <a href="#join" className="text-sm font-semibold text-accent hover:opacity-80">
-              Join
-            </a>
           </nav>
+          <a href="#join">
+            <Button variant="default" size="sm">
+              Join
+            </Button>
+          </a>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section
-        id="hero"
-        className="relative py-20 md:py-32 overflow-hidden"
-        style={{
-          backgroundImage: "url('/images/hero-bg.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-sm"></div>
-        <div className="container relative z-10">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-block bg-accent/20 text-primary px-4 py-2 rounded-full text-sm font-semibold">
-                AI workspace for home tutors
+      <section className="py-20 md:py-32 bg-gradient-to-b from-muted/50 to-background">
+        <div className="container">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="inline-block">
+                <span className="text-sm font-medium px-4 py-2 rounded-full bg-accent/10 text-accent-foreground">
+                  AI workspace for home tutors
+                </span>
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight text-primary">
-                Stop guessing travel time between home-tuition lessons.
+
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                Stop getting ghosted by tuition assignments
               </h1>
-              <p className="text-lg text-foreground/90 leading-relaxed">
-                An AI workspace that gives home tutors more time to be the mentor their students need.
-              </p>
-              <p className="text-base text-foreground/80">
-                TutorAtlas is built to make your day <strong>fuss-free</strong> so you can focus on what you do best: <strong>teaching</strong>.
+
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                An AI concierge that gives Singapore home tutors more time to be the mentor their students need—not scrolling Telegram or filling forms.
               </p>
 
-              {/* Value Bullets */}
-              <div className="space-y-3 pt-4">
-                {[
-                  "Commute Intelligence: Check if a new student fits your route before you say yes.",
-                  "Paper-to-Feedback (Math/Science): Snap a photo of worksheets to speed up marking and feedback.",
-                  "Tomorrow Prep Assistant: Turn today's results into the right practice materials for the next lesson.",
-                  "Less admin: Parent updates + payments in minutes, not midnight.",
-                ].map((bullet, idx) => (
-                  <div key={idx} className="flex gap-3 items-start">
-                    <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-foreground/90">{bullet}</p>
-                  </div>
-                ))}
-              </div>
+              <p className="text-base text-muted-foreground">
+                TutorAtlas is built to make your day <span className="font-semibold text-foreground">fuss-free</span> so you can focus on what you do best: <span className="font-semibold text-foreground">teaching</span>.
+              </p>
 
               {/* CTA */}
               <div className="pt-6">
@@ -202,12 +204,12 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Hero Image */}
-            <div className="hidden md:block">
-              <div className="aspect-square rounded-2xl overflow-hidden border border-border/50 shadow-lg">
+            {/* Hero Visual */}
+            <div className="relative">
+              <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   src="/images/solution-illustration.jpg"
-                  alt="TutorAtlas workspace illustration"
+                  alt="TutorAtlas workspace"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -216,540 +218,758 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Problem Section */}
-      <section id="problem" className="py-20 md:py-32 bg-white">
+      {/* Persona Selector */}
+      <section className="py-16 bg-muted/30">
         <div className="container">
-          <div className="max-w-3xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-              Home tuition pays well. The daily grind is the problem.
-            </h2>
-            <p className="text-lg text-foreground/80 mb-8 leading-relaxed">
-              If you're fully booked, your real workload isn't just teaching—it's <strong>commuting</strong>, rescheduling, chasing payments, <strong>marking</strong>, and prepping tomorrow's materials after a long day. Most tutors stitch together WhatsApp + calendars + notes + bank transfers and lose hours every week.
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {[
-                "Back-to-back lessons look fine on a calendar… until travel time ruins it.",
-                "Marking and writing feedback steals the time you wanted for teaching.",
-                "Planning tomorrow's lesson after a full day out is exhausting.",
-                "Parents want progress visibility, but updates take time.",
-              ].map((pain, idx) => (
-                <div key={idx} className="flex gap-4 p-4 rounded-lg bg-muted/50 border border-border">
-                  <div className="text-2xl">💭</div>
-                  <p className="text-foreground/80">{pain}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Solution Section */}
-      <section id="solution" className="py-20 md:py-32 bg-background">
-        <div className="container">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-            TutorAtlas makes tutoring operations effortless.
-          </h2>
-          <p className="text-lg text-foreground/80 mb-12 max-w-2xl">
-            TutorAtlas is designed for busy, in-demand tutors who want <strong>less fuss</strong>. It helps you make faster decisions, stay on time, and keep parents confident—without adding more work.
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Commute Intelligence Card */}
-            <div className="bg-white rounded-xl p-8 border border-border shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">🗺️</span>
-              </div>
-              <h3 className="text-xl font-bold text-primary mb-3">Commute Intelligence</h3>
-              <p className="text-foreground/80 mb-4">
-                Instantly check whether a new home-tuition gig fits your schedule—based on <strong>public transport travel time</strong> between lessons. Includes "As of Google Maps at [time]; estimates may vary."
-              </p>
-              <div className="pt-4 border-t border-border">
-                <p className="text-sm text-muted-foreground font-semibold">Outcomes:</p>
-                <p className="text-sm text-foreground/70">Accept the right gigs faster · Avoid risky back-to-backs · Reduce lateness stress</p>
-              </div>
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold">Who is this for?</h2>
+              <p className="text-muted-foreground">Pick your mode to see how TutorAtlas fits your workflow</p>
             </div>
 
-            {/* Paper-to-Feedback Card */}
-            <div className="bg-white rounded-xl p-8 border border-border shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">📸</span>
-              </div>
-              <h3 className="text-xl font-bold text-primary mb-3">Paper-to-Feedback (Math/Science)</h3>
-              <p className="text-foreground/80 mb-4">
-                Keep lessons <strong>paper-first</strong> (no devices). After the lesson, snap a photo of completed worksheets to generate <strong>quick marks per question</strong> and a feedback draft—best suited for <strong>deterministic subjects</strong> (e.g., math/science). You stay in control: review before sharing.
-              </p>
-              <div className="pt-4 border-t border-border">
-                <p className="text-xs text-muted-foreground italic">Best for deterministic questions; open-ended subjects require manual review.</p>
-              </div>
+            {/* Persona Tabs */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button
+                variant={selectedPersona === "part-time" ? "default" : "outline"}
+                onClick={() => setSelectedPersona("part-time")}
+                className="flex-1 sm:flex-none"
+              >
+                Part-time Tutor
+              </Button>
+              <Button
+                variant={selectedPersona === "full-time" ? "default" : "outline"}
+                onClick={() => setSelectedPersona("full-time")}
+                className="flex-1 sm:flex-none"
+              >
+                Full-time Tutor
+              </Button>
+              <Button
+                variant={selectedPersona === "centre" ? "default" : "outline"}
+                onClick={() => setSelectedPersona("centre")}
+                className="flex-1 sm:flex-none"
+              >
+                Centre Owner (Pilot)
+              </Button>
             </div>
 
-            {/* Tomorrow Prep Assistant Card */}
-            <div className="bg-white rounded-xl p-8 border border-border shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mb-4">
-                <span className="text-2xl">✨</span>
-              </div>
-              <h3 className="text-xl font-bold text-primary mb-3">Tomorrow Prep Assistant</h3>
-              <p className="text-foreground/80 mb-4">
-                After a long day travelling, the hardest part is planning the next lesson. Upload what you have—similar worksheets, rough drafts, or existing materials—and TutorAtlas helps you generate <strong>student-ready practice</strong> at the right difficulty.
+            {/* Persona Content */}
+            <div className="bg-card rounded-xl p-8 shadow-sm border">
+              <p className="text-lg text-muted-foreground mb-6">
+                {personaContent[selectedPersona].subhead}
               </p>
-              <div className="pt-4 border-t border-border">
-                <p className="text-sm text-foreground/70">Targeted practice based on recent performance.</p>
+              <ul className="space-y-3 mb-6">
+                {personaContent[selectedPersona].benefits.map((benefit, idx) => (
+                  <li key={idx} className="flex gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="pt-4 border-t">
+                <p className="text-sm font-medium text-accent">{personaContent[selectedPersona].target}</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 md:py-32 bg-white">
+      {/* Pain Reality Section */}
+      <section id="solution" className="py-20 bg-background">
         <div className="container">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-primary">How it works (simple)</h2>
+          <div className="max-w-4xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">Today's workflow is broken</h2>
+              <p className="text-xl text-muted-foreground">
+                Scroll, sift, retype, wait, get ghosted—repeat
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-5 gap-4 mb-8">
-            {[
-              { num: "1", text: "Add your schedule + student locations (postal code level)." },
-              { num: "2", text: "A new lead comes in → tap Check Fit." },
-              { num: "3", text: "TutorAtlas tells you if it fits—and what it does to your travel time." },
-              { num: "4", text: "Teach as you normally do (paper-first). Snap a photo to speed up marking (math/science)." },
-              { num: "5", text: "Generate a parent update and invoice in minutes." },
-            ].map((step, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-bold mb-3">
-                  {step.num}
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <MessageCircle className="h-6 w-6 text-destructive" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">~60 Telegram blasts daily</h3>
+                    <p className="text-sm text-muted-foreground">
+                      But only ~3 suitable assignments every 2 weeks for a constrained tutor
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm text-center text-foreground/80">{step.text}</p>
-              </div>
-            ))}
-          </div>
 
-          <div className="bg-muted/50 border border-border rounded-lg p-6 text-center">
-            <p className="text-foreground/80 font-semibold">
-              You stay in control. Nothing is sent to parents without your approval.
-            </p>
+                <div className="flex gap-4">
+                  <div className="shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <Clock className="h-6 w-6 text-destructive" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Repetitive form spam</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Re-enter the same details (name, phone, availability, rate) for every Google Form
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <Mail className="h-6 w-6 text-destructive" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">0–1 replies is common</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Even after effort spent applying, you often hear nothing back
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+                      <MapPin className="h-6 w-6 text-destructive" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold mb-2">Postal code guesswork</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Manual map checks to assess if commute fits your schedule
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-muted/50 rounded-xl p-6 border-2 border-dashed flex items-center justify-center">
+                <div className="text-center space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    [Screenshot placeholder: Telegram assignment blast → Google Form link]
+                  </p>
+                  <p className="text-xs text-muted-foreground italic">
+                    The current reality: high volume, low signal, zero transparency
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 md:py-32 bg-background">
+      <section id="features" className="py-20 bg-muted/30">
         <div className="container">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-primary">
-            Everything you need—without the chaos.
-          </h2>
+          <div className="max-w-4xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">What changes with TutorAtlas</h2>
+              <p className="text-xl text-muted-foreground">
+                A tutor workstation that removes the repetitive, low-value work
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((feature) => (
-              <div
-                key={feature.id}
-                className="bg-white rounded-lg p-6 border border-border hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-lg font-bold text-primary mb-2">{feature.title}</h3>
-                <p className="text-foreground/80 text-sm">{feature.description}</p>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-card rounded-xl p-6 shadow-sm border space-y-4">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Star className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">AI Assignment Concierge</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Set preferences once (subjects, levels, locations, time windows, rate floor)</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Get 3–5 curated matches instead of scrolling 60 posts</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>One-tap apply from your saved profile—no retyping</span>
+                  </li>
+                </ul>
               </div>
-            ))}
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border space-y-4">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">Commute Intelligence</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Convert postal codes into real commute estimates</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>"Fits your schedule?" check with travel time buffer</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Optional route day view for multi-stop tutors</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border space-y-4">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Clock className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">Status & Transparency</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Track what you applied for</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>See if it's still open or closed</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Reduce dead-end applications by 30–60% (target)</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border space-y-4">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Star className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">Verified Reviews (Pilot)</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Credible proof layer so your results speak louder than labels</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Verification, moderation, and dispute process included</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Differentiate beyond MOE signaling</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 bg-background">
+        <div className="container">
+          <div className="max-w-4xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">How it works</h2>
+              <p className="text-xl text-muted-foreground">
+                Three steps. Designed for &lt;2 minutes per day.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                  1
+                </div>
+                <h3 className="text-xl font-semibold">Set preferences</h3>
+                <p className="text-sm text-muted-foreground">
+                  Subjects, levels, locations, time windows, rate floor—once
+                </p>
+              </div>
+
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                  2
+                </div>
+                <h3 className="text-xl font-semibold">Get shortlist</h3>
+                <p className="text-sm text-muted-foreground">
+                  3–5 curated matches arrive daily, filtered by your criteria
+                </p>
+              </div>
+
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-2xl font-bold mx-auto">
+                  3
+                </div>
+                <h3 className="text-xl font-semibold">One-tap apply</h3>
+                <p className="text-sm text-muted-foreground">
+                  Apply with saved profile + see commute fit + track status
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Outcomes Section */}
-      <section id="outcomes" className="py-20 md:py-32 bg-white">
+      <section id="outcomes" className="py-20 bg-muted/30">
         <div className="container">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-primary">
-            For tutors who want to focus on teaching, not admin.
-          </h2>
+          <div className="max-w-4xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">Target outcomes</h2>
+              <p className="text-xl text-muted-foreground">
+                Beta benchmarks we'll measure with the founding cohort
+              </p>
+              <p className="text-sm text-muted-foreground italic">
+                These are targets, not guarantees. We're validating them together.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "More time for what matters",
-                description: "Spend less time on logistics and more time being the mentor your students need.",
-              },
-              {
-                title: "Less burnout",
-                description: "Reduce the daily stress of juggling schedules, payments, and prep work.",
-              },
-              {
-                title: "Better student outcomes",
-                description: "Faster feedback and smarter prep materials help students progress faster.",
-              },
-            ].map((outcome, idx) => (
-              <div key={idx} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl">✓</span>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-card rounded-xl p-6 shadow-sm border">
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-4xl font-bold text-accent">50–80%</span>
+                  <span className="text-sm text-muted-foreground">reduction</span>
                 </div>
-                <h3 className="text-xl font-bold text-primary mb-2">{outcome.title}</h3>
-                <p className="text-foreground/80">{outcome.description}</p>
+                <p className="text-sm font-medium">Lead sifting time</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  From scrolling 60 posts to reviewing 3–5 curated matches
+                </p>
               </div>
-            ))}
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border">
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-4xl font-bold text-accent">&lt;60s</span>
+                  <span className="text-sm text-muted-foreground">per lead</span>
+                </div>
+                <p className="text-sm font-medium">Application time</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  From minutes of form-filling to one-tap apply
+                </p>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border">
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-4xl font-bold text-accent">&lt;15s</span>
+                  <span className="text-sm text-muted-foreground">decision</span>
+                </div>
+                <p className="text-sm font-medium">Commute-fit check</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  From manual map lookups to instant route visibility
+                </p>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border">
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-4xl font-bold text-accent">30–60%</span>
+                  <span className="text-sm text-muted-foreground">reduction</span>
+                </div>
+                <p className="text-sm font-medium">Dead-end applications</p>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Better filtering + status signals = fewer wasted efforts
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Credibility Section */}
+      <section className="py-20 bg-background">
+        <div className="container">
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">What we're NOT promising</h2>
+              <p className="text-xl text-muted-foreground">
+                Honest about what TutorAtlas does (and doesn't) do
+              </p>
+            </div>
+
+            <div className="bg-card rounded-xl p-8 shadow-sm border space-y-6">
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">❌ We do NOT guarantee placements</h3>
+                <p className="text-sm text-muted-foreground">
+                  TutorAtlas is a workstation that reduces wasted effort and increases hit-rate through better filtering, faster applying, and clearer commute fit. We don't promise guaranteed students or earnings.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">✅ We DO reduce friction and uncertainty</h3>
+                <p className="text-sm text-muted-foreground">
+                  By sitting on top of how you already operate (Telegram, WhatsApp, Maps), we remove the repetitive, low-value work so you can focus on teaching.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">🔒 Reviews have safeguards</h3>
+                <p className="text-sm text-muted-foreground">
+                  Verified-only, moderation, right-to-respond, and dispute workflow (pilot rules). We're building this carefully with the founding cohort.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Founding Cohort Section */}
-      <section id="founding-cohort" className="py-20 md:py-32 bg-background">
-        <div className="container max-w-2xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
-              Join our founding cohort.
-            </h2>
-            <p className="text-lg text-foreground/80">
-              We're looking for 10 high-quality tutors to validate demand and shape the product. Early access is limited and selective.
-            </p>
-          </div>
+      <section id="cohort" className="py-20 bg-muted/30">
+        <div className="container">
+          <div className="max-w-4xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">Join the founding cohort</h2>
+              <p className="text-xl text-muted-foreground">
+                Early access + influence the roadmap + founder-tier benefits
+              </p>
+            </div>
 
-          <div className="bg-white rounded-xl p-8 border border-border space-y-4">
-            <div className="flex gap-3">
-              <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-              <p className="text-foreground/80">Direct input on product roadmap</p>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="bg-card rounded-xl p-6 shadow-sm border text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+                  <CheckCircle2 className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="font-semibold">Early access</h3>
+                <p className="text-sm text-muted-foreground">
+                  Be among the first to use TutorAtlas before public launch
+                </p>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+                  <MessageCircle className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="font-semibold">Shape the product</h3>
+                <p className="text-sm text-muted-foreground">
+                  Direct feedback loops and priority roadmap influence
+                </p>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+                  <Star className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="font-semibold">Founder benefits</h3>
+                <p className="text-sm text-muted-foreground">
+                  Potential founder-tier pricing and exclusive perks
+                </p>
+              </div>
             </div>
-            <div className="flex gap-3">
-              <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-              <p className="text-foreground/80">Early pricing and lifetime benefits</p>
-            </div>
-            <div className="flex gap-3">
-              <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-              <p className="text-foreground/80">1-on-1 onboarding and support</p>
-            </div>
-            <div className="flex gap-3">
-              <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-              <p className="text-foreground/80">Help us build the future of tutor operations</p>
+
+            <div className="bg-card rounded-xl p-6 shadow-sm border">
+              <p className="text-sm text-muted-foreground text-center">
+                <strong>What we ask:</strong> Honest feedback, willingness to test features, and help us understand what actually works for your workflow. If you know 1–2 other tutors who'd benefit, we'd love an introduction.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 md:py-32 bg-white">
-        <div className="container max-w-2xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-12 text-primary text-center">
-            Frequently asked questions
-          </h2>
+      <section id="faq" className="py-20 bg-background">
+        <div className="container">
+          <div className="max-w-3xl mx-auto space-y-12">
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">Frequently asked questions</h2>
+            </div>
 
-          <div className="space-y-4">
-            {[
-              {
-                q: "Is my data private?",
-                a: "Yes. We only collect the information you provide. We don't ask for sensitive student data. See our Privacy Policy for details.",
-              },
-              {
-                q: "Is TutorAtlas paper-first?",
-                a: "Yes. You teach as you normally do (paper-first). TutorAtlas helps with scheduling, marking photos, and prep—not replacing your teaching method.",
-              },
-              {
-                q: "What subjects does Paper-to-Feedback work best for?",
-                a: "Best for deterministic subjects like Math and Science. Open-ended subjects (e.g., essay writing) require manual review.",
-              },
-              {
-                q: "Will TutorAtlas send things to parents without my approval?",
-                a: "No. You stay in control. Nothing is sent to parents without your review and approval.",
-              },
-              {
-                q: "What if the commute estimate is wrong?",
-                a: "Commute estimates are based on Google Maps and may vary. Always use your own judgment. We include a timestamp disclaimer.",
-              },
-              {
-                q: "How much will TutorAtlas cost?",
-                a: "We're still validating demand. Founding cohort members will get special early pricing. Pricing details coming soon.",
-              },
-            ].map((faq, idx) => (
-              <details
-                key={idx}
-                className="group border border-border rounded-lg p-4 cursor-pointer hover:bg-muted/50 transition-colors"
-              >
-                <summary className="flex items-center justify-between font-semibold text-foreground">
-                  {faq.q}
-                  <ChevronDown className="w-5 h-5 group-open:rotate-180 transition-transform" />
-                </summary>
-                <p className="text-foreground/80 mt-3 text-sm">{faq.a}</p>
-              </details>
-            ))}
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Will this actually get me students?</h3>
+                <p className="text-sm text-muted-foreground">
+                  We do not promise guaranteed placement. We reduce wasted effort and increase hit-rate by better filtering, faster applying, and clearer commute fit. You still need to apply and win the assignment—we just make that process less painful.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Sounds like more overhead. I'm busy.</h3>
+                <p className="text-sm text-muted-foreground">
+                  Set preferences once. Daily shortlist comes to you. Designed for &lt;2 minutes/day. The goal is to save you time, not add work.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">What about privacy? My students' addresses and data.</h3>
+                <p className="text-sm text-muted-foreground">
+                  Data minimization and consent. In beta, we focus on tutor preferences and assignment details. We avoid storing sensitive student info unless required, and you control what you share.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Reviews can be unfair.</h3>
+                <p className="text-sm text-muted-foreground">
+                  Verified-only, moderation, right-to-respond, dispute workflow (pilot rules). We're building this carefully to be fair and credible, not a free-for-all.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">Agencies already exist. Why is this different?</h3>
+                <p className="text-sm text-muted-foreground">
+                  TutorAtlas sits on top of existing channels (Telegram, agencies). You keep your options. We remove friction and increase professionalism. Think of it as a workstation, not a replacement.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">I run my own centre. I don't apply to Telegram assignments.</h3>
+                <p className="text-sm text-muted-foreground">
+                  That's a valid different workflow. We can pilot a <strong>centre-mode track</strong> focused on enquiry capture, scheduling/trials, parent updates, and basic admin. If you still take occasional 1:1 or overflow students, the concierge can also filter for your centre's radius.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Join Form Section */}
-      <section id="join" className="py-20 md:py-32 bg-background">
-        <div className="container max-w-2xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-primary text-center">
-            Join early access
-          </h2>
-          <p className="text-lg text-foreground/80 text-center mb-12">
-            Tell us about yourself and your tutoring practice. We'll be in touch within 48 hours.
-          </p>
-
-          {formSubmitted ? (
-            <div className="bg-white rounded-xl p-8 border border-border text-center">
-              <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="w-8 h-8 text-accent" />
+      <section id="join" className="py-20 bg-muted/30">
+        <div className="container">
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-card rounded-2xl p-8 md:p-12 shadow-xl border">
+              <div className="text-center space-y-4 mb-8">
+                <h2 className="text-3xl font-bold">Join the founding cohort</h2>
+                <p className="text-muted-foreground">
+                  We'll reach out within 48 hours to schedule a 15-minute chat
+                </p>
               </div>
-              <h3 className="text-2xl font-bold text-primary mb-2">Thank you!</h3>
-              <p className="text-foreground/80 mb-4">
-                We've received your submission. We'll review your details and reach out within 48 hours.
-              </p>
-              <p className="text-sm text-muted-foreground">
-                In the meantime, check out our <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link> and <Link href="/terms" className="text-primary hover:underline">Terms of Use</Link>.
-              </p>
+
+              {formSubmitted ? (
+                <div className="text-center py-12 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-semibold">Thank you!</h3>
+                  <p className="text-muted-foreground">
+                    We'll be in touch within 48 hours.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <Label htmlFor="name">
+                      Name <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+
+                  {/* Contact Methods */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="whatsapp">WhatsApp</Label>
+                      <Input
+                        id="whatsapp"
+                        name="whatsapp"
+                        value={formData.whatsapp}
+                        onChange={handleInputChange}
+                        placeholder="+65 XXXX XXXX"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    * At least one contact method (WhatsApp or Email) is required
+                  </p>
+
+                  {/* Teaching Format */}
+                  <div className="space-y-2">
+                    <Label htmlFor="teachingFormat">Teaching Format</Label>
+                    <Select
+                      value={formData.teachingFormat}
+                      onValueChange={(value) => handleSelectChange("teachingFormat", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your teaching format" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="In-person">In-person</SelectItem>
+                        <SelectItem value="Online">Online</SelectItem>
+                        <SelectItem value="Hybrid">Hybrid (both)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Weekly Hours */}
+                  <div className="space-y-2">
+                    <Label htmlFor="weeklyHours">Weekly Teaching Hours</Label>
+                    <Select
+                      value={formData.weeklyHours}
+                      onValueChange={(value) => handleSelectChange("weeklyHours", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your weekly hours" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="<5 hours">&lt;5 hours</SelectItem>
+                        <SelectItem value="5-10 hours">5-10 hours</SelectItem>
+                        <SelectItem value="10-15 hours">10-15 hours</SelectItem>
+                        <SelectItem value="15-20 hours">15-20 hours</SelectItem>
+                        <SelectItem value="20+ hours">20+ hours</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Commute Hours */}
+                  <div className="space-y-2">
+                    <Label htmlFor="commuteHours">Weekly Commute Hours</Label>
+                    <Select
+                      value={formData.commuteHours}
+                      onValueChange={(value) => handleSelectChange("commuteHours", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your commute hours" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="<1 hour">&lt;1 hour</SelectItem>
+                        <SelectItem value="1-2 hours">1-2 hours</SelectItem>
+                        <SelectItem value="2-3 hours">2-3 hours</SelectItem>
+                        <SelectItem value="3-5 hours">3-5 hours</SelectItem>
+                        <SelectItem value="5+ hours">5+ hours</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Biggest Pain */}
+                  <div className="space-y-2">
+                    <Label htmlFor="biggestPain">Biggest Pain Point</Label>
+                    <Select
+                      value={formData.biggestPain}
+                      onValueChange={(value) => handleSelectChange("biggestPain", value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="What frustrates you most?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Finding suitable assignments">Finding suitable assignments</SelectItem>
+                        <SelectItem value="Travel time between lessons">Travel time between lessons</SelectItem>
+                        <SelectItem value="Repetitive form filling">Repetitive form filling</SelectItem>
+                        <SelectItem value="Getting ghosted after applying">Getting ghosted after applying</SelectItem>
+                        <SelectItem value="Parent coordination and admin">Parent coordination and admin</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Subjects */}
+                  <div className="space-y-2">
+                    <Label htmlFor="subjects">Subjects You Teach</Label>
+                    <Input
+                      id="subjects"
+                      name="subjects"
+                      value={formData.subjects}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Math, Science, English"
+                    />
+                  </div>
+
+                  {/* Optional Notes */}
+                  <div className="space-y-2">
+                    <Label htmlFor="optionalNotes">Anything else we should know?</Label>
+                    <Textarea
+                      id="optionalNotes"
+                      name="optionalNotes"
+                      value={formData.optionalNotes}
+                      onChange={handleInputChange}
+                      placeholder="Optional: Share any specific challenges or ideas"
+                      rows={4}
+                    />
+                  </div>
+
+                  {/* Checkboxes */}
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="interviewOptIn"
+                        checked={formData.interviewOptIn}
+                        onCheckedChange={(checked) => handleCheckboxChange("interviewOptIn", checked as boolean)}
+                      />
+                      <Label htmlFor="interviewOptIn" className="text-sm font-normal leading-relaxed cursor-pointer">
+                        I'm open to a 15-minute interview to share my workflow and pain points
+                      </Label>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="willingnessToPayOptIn"
+                        checked={formData.willingnessToPayOptIn}
+                        onCheckedChange={(checked) => handleCheckboxChange("willingnessToPayOptIn", checked as boolean)}
+                      />
+                      <Label htmlFor="willingnessToPayOptIn" className="text-sm font-normal leading-relaxed cursor-pointer">
+                        I'd consider paying for a tool that genuinely saves me time
+                      </Label>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="receiveUpdates"
+                        checked={formData.receiveUpdates}
+                        onCheckedChange={(checked) => handleCheckboxChange("receiveUpdates", checked as boolean)}
+                      />
+                      <Label htmlFor="receiveUpdates" className="text-sm font-normal leading-relaxed cursor-pointer">
+                        Keep me updated on TutorAtlas progress
+                      </Label>
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Submitting..." : "Join Founding Cohort"}
+                  </Button>
+
+                  <p className="text-xs text-center text-muted-foreground">
+                    By submitting, you agree to our{" "}
+                    <Link href="/privacy" className="underline hover:text-foreground">
+                      Privacy Policy
+                    </Link>{" "}
+                    and{" "}
+                    <Link href="/terms" className="underline hover:text-foreground">
+                      Terms of Use
+                    </Link>
+                  </p>
+                </form>
+              )}
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="bg-white rounded-xl p-8 border border-border space-y-6">
-              {/* Name */}
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-foreground font-semibold">
-                  Your name *
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="e.g., Ben"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="bg-background border-border"
-                  required
-                />
-              </div>
-
-              {/* Contact Methods */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp" className="text-foreground font-semibold flex items-center gap-2">
-                    <MessageCircle className="w-4 h-4" />
-                    WhatsApp number
-                  </Label>
-                  <Input
-                    id="whatsapp"
-                    name="whatsapp"
-                    type="tel"
-                    placeholder="e.g., 9xxx xxxx"
-                    value={formData.whatsapp}
-                    onChange={handleInputChange}
-                    className="bg-background border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground font-semibold flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="e.g., ben@example.com"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="bg-background border-border"
-                  />
-                </div>
-              </div>
-
-              <p className="text-xs text-muted-foreground">
-                * Please provide at least one contact method (WhatsApp or Email)
-              </p>
-
-              {/* Teaching Format */}
-              <div className="space-y-2">
-                <Label htmlFor="teachingFormat" className="text-foreground font-semibold">
-                  Teaching format
-                </Label>
-                <Select value={formData.teachingFormat} onValueChange={(value) => handleSelectChange("teachingFormat", value)}>
-                  <SelectTrigger className="bg-background border-border">
-                    <SelectValue placeholder="Select teaching format" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="in-person">In-person (home tuition)</SelectItem>
-                    <SelectItem value="online">Online</SelectItem>
-                    <SelectItem value="hybrid">Hybrid (both)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Weekly Hours */}
-              <div className="space-y-2">
-                <Label htmlFor="weeklyHours" className="text-foreground font-semibold">
-                  Weekly teaching hours (approximate)
-                </Label>
-                <Select value={formData.weeklyHours} onValueChange={(value) => handleSelectChange("weeklyHours", value)}>
-                  <SelectTrigger className="bg-background border-border">
-                    <SelectValue placeholder="Select range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0-10">0-10 hours</SelectItem>
-                    <SelectItem value="11-20">11-20 hours</SelectItem>
-                    <SelectItem value="21-30">21-30 hours</SelectItem>
-                    <SelectItem value="31-40">31-40 hours</SelectItem>
-                    <SelectItem value="40+">40+ hours</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Commute Hours */}
-              <div className="space-y-2">
-                <Label htmlFor="commuteHours" className="text-foreground font-semibold">
-                  Average commuting hours per day
-                </Label>
-                <Select value={formData.commuteHours} onValueChange={(value) => handleSelectChange("commuteHours", value)}>
-                  <SelectTrigger className="bg-background border-border">
-                    <SelectValue placeholder="Select range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0-1">0-1 hour</SelectItem>
-                    <SelectItem value="1-2">1-2 hours</SelectItem>
-                    <SelectItem value="2-3">2-3 hours</SelectItem>
-                    <SelectItem value="3+">3+ hours</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Biggest Pain */}
-              <div className="space-y-2">
-                <Label htmlFor="biggestPain" className="text-foreground font-semibold">
-                  What's your biggest pain point? *
-                </Label>
-                <Select value={formData.biggestPain} onValueChange={(value) => handleSelectChange("biggestPain", value)}>
-                  <SelectTrigger className="bg-background border-border">
-                    <SelectValue placeholder="Select your biggest pain" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PAIN_POINTS.map((pain) => (
-                      <SelectItem key={pain} value={pain}>
-                        {pain}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Subjects */}
-              <div className="space-y-2">
-                <Label htmlFor="subjects" className="text-foreground font-semibold">
-                  Subjects you teach (optional)
-                </Label>
-                <Input
-                  id="subjects"
-                  name="subjects"
-                  type="text"
-                  placeholder="e.g., Math, Science, English"
-                  value={formData.subjects}
-                  onChange={handleInputChange}
-                  className="bg-background border-border"
-                />
-              </div>
-
-              {/* Optional Notes */}
-              <div className="space-y-2">
-                <Label htmlFor="optionalNotes" className="text-foreground font-semibold">
-                  Anything else you'd like to share? (optional)
-                </Label>
-                <Textarea
-                  id="optionalNotes"
-                  name="optionalNotes"
-                  placeholder="e.g., I have tons of worksheets but hard to find the right ones"
-                  value={formData.optionalNotes}
-                  onChange={handleInputChange}
-                  className="bg-background border-border min-h-24"
-                />
-              </div>
-
-              {/* Checkboxes */}
-              <div className="space-y-3 pt-4 border-t border-border">
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="interviewOptIn"
-                    checked={formData.interviewOptIn}
-                    onCheckedChange={(checked) => handleCheckboxChange("interviewOptIn", checked as boolean)}
-                    className="mt-1"
-                  />
-                  <label htmlFor="interviewOptIn" className="text-sm text-foreground/80 cursor-pointer">
-                    I'm interested in booking a 15-minute interview to discuss TutorAtlas
-                  </label>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="willingnessToPayOptIn"
-                    checked={formData.willingnessToPayOptIn}
-                    onCheckedChange={(checked) => handleCheckboxChange("willingnessToPayOptIn", checked as boolean)}
-                    className="mt-1"
-                  />
-                  <label htmlFor="willingnessToPayOptIn" className="text-sm text-foreground/80 cursor-pointer">
-                    I would consider paying for TutorAtlas if it solves my #1 pain
-                  </label>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="receiveUpdates"
-                    checked={formData.receiveUpdates}
-                    onCheckedChange={(checked) => handleCheckboxChange("receiveUpdates", checked as boolean)}
-                    className="mt-1"
-                  />
-                  <label htmlFor="receiveUpdates" className="text-sm text-foreground/80 cursor-pointer">
-                    I'd like to receive product updates and news from TutorAtlas
-                  </label>
-                </div>
-              </div>
-
-              {/* Consent Text */}
-              <div className="bg-muted/50 border border-border rounded-lg p-4 text-xs text-muted-foreground space-y-2">
-                <p>
-                  By submitting this form, you agree to TutorAtlas contacting you about early access and interviews. Your data is protected under our <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link> and <Link href="/terms" className="text-primary hover:underline">Terms of Use</Link>.
-                </p>
-                <p>
-                  For questions, contact us at <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary hover:underline">{CONTACT_EMAIL}</a>.
-                </p>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                size="lg"
-                disabled={isSubmitting}
-                className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold"
-              >
-                {isSubmitting ? "Submitting..." : "Join Early Access"}
-              </Button>
-            </form>
-          )}
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-12">
+      <footer className="py-12 bg-background border-t">
         <div className="container">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <h4 className="font-bold mb-4">TutorAtlas</h4>
-              <p className="text-sm opacity-80">AI workspace for home tutors</p>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-2">
+              <img 
+                src="/images/tutoratlas_logo_horizontal.png" 
+                alt="TutorAtlas" 
+                className="h-6"
+              />
             </div>
-            <div>
-              <h5 className="font-semibold mb-3 text-sm">Product</h5>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><a href="#solution" className="hover:opacity-100">Solution</a></li>
-                <li><a href="#features" className="hover:opacity-100">Features</a></li>
-                <li><a href="#faq" className="hover:opacity-100">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-3 text-sm">Legal</h5>
-              <ul className="space-y-2 text-sm opacity-80">
-                <li><Link href="/privacy" className="hover:opacity-100">Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:opacity-100">Terms of Use</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-3 text-sm">Contact</h5>
-              <p className="text-sm opacity-80">
-                <a href={`mailto:${CONTACT_EMAIL}`} className="hover:opacity-100">
-                  {CONTACT_EMAIL}
-                </a>
-              </p>
+            <div className="flex gap-8 text-sm">
+              <Link href="/privacy" className="hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="hover:text-primary transition-colors">
+                Terms of Use
+              </Link>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-primary transition-colors">
+                Contact
+              </a>
             </div>
           </div>
-
-          <div className="border-t border-primary-foreground/20 pt-8 text-center text-sm opacity-80">
-            <p>&copy; 2025 TutorAtlas. All rights reserved. Built for Singapore home tutors.</p>
+          <div className="text-center mt-8 text-sm text-muted-foreground">
+            <p>© 2026 TutorAtlas. Built for Singapore home tutors.</p>
           </div>
         </div>
       </footer>
