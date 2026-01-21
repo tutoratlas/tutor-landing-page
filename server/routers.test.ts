@@ -1,10 +1,16 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { appRouter } from "./routers";
 import * as googleSheets from "./googleSheets";
+import * as notification from "./_core/notification";
 
 // Mock the Google Sheets module
 vi.mock("./googleSheets", () => ({
   appendToGoogleSheet: vi.fn(),
+}));
+
+// Mock the notification module
+vi.mock("./_core/notification", () => ({
+  notifyOwner: vi.fn(),
 }));
 
 describe("Form Submission Router", () => {
@@ -174,6 +180,50 @@ describe("Form Submission Router", () => {
       expect(callArgs.interviewOptIn).toBe(true);
       expect(callArgs.willingnessToPayOptIn).toBe(true);
       expect(callArgs.receiveUpdates).toBe(true);
+    });
+
+    it("should send email notification on successful form submission", async () => {
+      const mockAppendToGoogleSheet = vi.mocked(googleSheets.appendToGoogleSheet);
+      const mockNotifyOwner = vi.mocked(notification.notifyOwner);
+      mockAppendToGoogleSheet.mockResolvedValue(true);
+      mockNotifyOwner.mockResolvedValue(true);
+
+      const caller = createCaller();
+      await caller.form.submit({
+        name: "Test Notification",
+        whatsapp: "+6591234567",
+        email: "test@example.com",
+        telegram: "@testuser",
+        interviewOptIn: true,
+        willingnessToPayOptIn: false,
+        receiveUpdates: true,
+      });
+
+      expect(mockNotifyOwner).toHaveBeenCalledOnce();
+      const notifyArgs = mockNotifyOwner.mock.calls[0][0];
+      expect(notifyArgs.title).toContain("Test Notification");
+      expect(notifyArgs.content).toContain("WhatsApp: +6591234567");
+      expect(notifyArgs.content).toContain("Email: test@example.com");
+      expect(notifyArgs.content).toContain("Telegram: @testuser");
+    });
+
+    it("should still succeed even if email notification fails", async () => {
+      const mockAppendToGoogleSheet = vi.mocked(googleSheets.appendToGoogleSheet);
+      const mockNotifyOwner = vi.mocked(notification.notifyOwner);
+      mockAppendToGoogleSheet.mockResolvedValue(true);
+      mockNotifyOwner.mockRejectedValue(new Error("Notification failed"));
+
+      const caller = createCaller();
+      const result = await caller.form.submit({
+        name: "Test User",
+        whatsapp: "+6591234567",
+        interviewOptIn: false,
+        willingnessToPayOptIn: false,
+        receiveUpdates: false,
+      });
+
+      expect(result.success).toBe(true);
+      expect(mockNotifyOwner).toHaveBeenCalledOnce();
     });
   });
 });
