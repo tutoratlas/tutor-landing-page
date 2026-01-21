@@ -110,13 +110,13 @@ export default function Home() {
       target: "Target: Cut lead sifting time by 50–80%"
     },
     "full-time": {
-      subhead: "Multi-stop days dominated by travel. Route planning is critical.",
+      subhead: "Payment chasing steals your time. Scheduling is second. You need centre-level polish without centre overhead.",
       benefits: [
-        "See commute-fit and route viability before you apply",
-        "One-tap apply without retyping your profile every time",
-        "Track application status instead of wondering if it's still open"
+        "Get paid without chasing: lesson + payment log in seconds (pilot)",
+        "Multi-stop schedule sanity: commute-fit and route viability before you apply",
+        "Compete with centres at the same price—without hiring staff"
       ],
-      target: "Target: Reduce application time to <60 seconds per lead"
+      target: "Target: Reduce payment chasing time by 40–60% (pilot)"
     },
     "centre": {
       subhead: "Owner-operator juggling teaching + enquiries + scheduling + admin.",
@@ -416,9 +416,30 @@ export default function Home() {
 
               <div className="bg-card rounded-xl p-6 shadow-sm border space-y-4">
                 <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Star className="h-6 w-6 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">Terms & Commission Transparency</h3>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>See fee/commission rules before you apply</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>"Net hourly" estimator (after commute + any stated fee)</span>
+                  </li>
+                  <li className="flex gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
+                    <span>Know the deal before you invest your time</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-card rounded-xl p-6 shadow-sm border space-y-4">
+                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
                   <Clock className="h-6 w-6 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold">Status & Transparency</h3>
+                <h3 className="text-xl font-semibold">Status & Visibility</h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
@@ -682,9 +703,9 @@ export default function Home() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">What about privacy? My students' addresses and data.</h3>
+                <h3 className="text-lg font-semibold">What about privacy? Will you sell my data or share with agencies?</h3>
                 <p className="text-sm text-muted-foreground">
-                  Data minimization and consent. In beta, we focus on tutor preferences and assignment details. We avoid storing sensitive student info unless required, and you control what you share.
+                  <strong>Explicit pledge:</strong> We do not sell your data. We do not share with agencies or tuition centres. Data minimization: we only collect what's needed for the features you use. You control what you share. In beta, we focus on tutor preferences and assignment details—sensitive student info is avoided unless required for a feature you explicitly enable.
                 </p>
               </div>
 

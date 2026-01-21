@@ -52,3 +52,9 @@
 - [x] Update interview duration text from "15-minute" to "15-30 minute"
 - [x] Update backend schema and Google Sheets to include Telegram handle
 - [x] Test form submission with new field (all 10 tests passing, headers updated)
+
+## PRD v5 Updates
+- [x] Read and analyze PRD v5 for new full-time tutor persona content
+- [x] Update landing page copy to reflect full-time tutor insights
+- [x] Fix logo background (remove white border from top left)
+- [x] Test all changes and save checkpoint (all 10 tests passing, logo transparent, copy updated)
