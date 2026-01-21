@@ -30,6 +30,7 @@ describe("Form Submission Router", () => {
         name: "John Doe",
         whatsapp: "+6591234567",
         email: "john@example.com",
+        telegram: "@johndoe",
         teachingFormat: "In-person",
         weeklyHours: "10-15 hours",
         commuteHours: "2-3 hours",
@@ -147,6 +148,7 @@ describe("Form Submission Router", () => {
         name: "Complete Form",
         whatsapp: "+6591234567",
         email: "complete@example.com",
+        telegram: "@completeuser",
         teachingFormat: "Hybrid",
         weeklyHours: "5-10 hours",
         commuteHours: "1-2 hours",
@@ -162,6 +164,7 @@ describe("Form Submission Router", () => {
       expect(callArgs.name).toBe("Complete Form");
       expect(callArgs.whatsapp).toBe("+6591234567");
       expect(callArgs.email).toBe("complete@example.com");
+      expect(callArgs.telegram).toBe("@completeuser");
       expect(callArgs.teachingFormat).toBe("Hybrid");
       expect(callArgs.weeklyHours).toBe("5-10 hours");
       expect(callArgs.commuteHours).toBe("1-2 hours");

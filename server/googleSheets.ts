@@ -12,6 +12,7 @@ interface FormSubmission {
   name: string;
   whatsapp: string;
   email: string;
+  telegram: string;
   teachingFormat: string;
   weeklyHours: string;
   commuteHours: string;
@@ -53,6 +54,7 @@ export async function appendToGoogleSheet(formData: FormSubmission): Promise<boo
       formData.name,
       formData.whatsapp,
       formData.email,
+      formData.telegram,
       formData.teachingFormat,
       formData.weeklyHours,
       formData.commuteHours,
@@ -67,7 +69,7 @@ export async function appendToGoogleSheet(formData: FormSubmission): Promise<boo
     // Append the row to the sheet
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:M', // Adjust range if needed
+      range: 'Sheet1!A:N', // Adjust range if needed
       valueInputOption: 'RAW',
       requestBody: {
         values: [rowData],
@@ -108,6 +110,7 @@ export async function initializeSheetHeaders(): Promise<boolean> {
       'Name',
       'WhatsApp',
       'Email',
+      'Telegram',
       'Teaching Format',
       'Weekly Hours',
       'Commute Hours',
@@ -122,7 +125,7 @@ export async function initializeSheetHeaders(): Promise<boolean> {
     // Check if headers already exist
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: 'Sheet1!A1:M1',
+      range: 'Sheet1!A1:N1',
     });
 
     if (response.data.values && response.data.values.length > 0) {
@@ -133,7 +136,7 @@ export async function initializeSheetHeaders(): Promise<boolean> {
     // Add headers
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: 'Sheet1!A1:M1',
+      range: 'Sheet1!A1:N1',
       valueInputOption: 'RAW',
       requestBody: {
         values: [headers],

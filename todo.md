@@ -46,3 +46,9 @@
 - [x] Share Google Sheet with service account email
 - [x] Update GOOGLE_SHEET_ID and GOOGLE_SHEETS_CREDENTIALS
 - [x] Test form submission to new sheet (all 10 tests passing)
+
+## Form Updates
+- [x] Add Telegram handle field to form (optional)
+- [x] Update interview duration text from "15-minute" to "15-30 minute"
+- [x] Update backend schema and Google Sheets to include Telegram handle
+- [x] Test form submission with new field (all 10 tests passing, headers updated)

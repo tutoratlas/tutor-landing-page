@@ -22,6 +22,7 @@ export default function Home() {
     name: "",
     whatsapp: "",
     email: "",
+    telegram: "",
     teachingFormat: "",
     weeklyHours: "",
     commuteHours: "",
@@ -46,6 +47,7 @@ export default function Home() {
           name: "",
           whatsapp: "",
           email: "",
+          telegram: "",
           teachingFormat: "",
           weeklyHours: "",
           commuteHours: "",
@@ -778,6 +780,18 @@ export default function Home() {
                     * At least one contact method (WhatsApp or Email) is required
                   </p>
 
+                  {/* Telegram Handle */}
+                  <div className="space-y-2">
+                    <Label htmlFor="telegram">Telegram Handle (Optional)</Label>
+                    <Input
+                      id="telegram"
+                      name="telegram"
+                      value={formData.telegram}
+                      onChange={handleInputChange}
+                      placeholder="@yourhandle"
+                    />
+                  </div>
+
                   {/* Teaching Format */}
                   <div className="space-y-2">
                     <Label htmlFor="teachingFormat">Teaching Format</Label>
@@ -891,7 +905,7 @@ export default function Home() {
                         onCheckedChange={(checked) => handleCheckboxChange("interviewOptIn", checked as boolean)}
                       />
                       <Label htmlFor="interviewOptIn" className="text-sm font-normal leading-relaxed cursor-pointer">
-                        I'm open to a 15-minute interview to share my workflow and pain points
+                        I'm open to a 15-30 minute interview to share my workflow and pain points
                       </Label>
                     </div>
 
