@@ -39,3 +39,10 @@
 - [x] Refine copy based on brand voice and messaging
 - [x] Update color scheme if needed per brand guidelines (no changes needed - already aligned)
 - [x] Test all changes and save checkpoint (9/10 tests passing - Google Sheets credential issue noted)
+
+## New Google Sheets Connection
+- [x] Create new Google Sheet titled "[tutoratlas] Early Access Submissions"
+- [x] Create new Google Cloud service account with Sheets API access
+- [x] Share Google Sheet with service account email
+- [x] Update GOOGLE_SHEET_ID and GOOGLE_SHEETS_CREDENTIALS
+- [x] Test form submission to new sheet (all 10 tests passing)
