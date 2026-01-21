@@ -8,7 +8,7 @@ export default function Privacy() {
       <header className="sticky top-0 z-50 bg-white border-b border-border">
         <div className="container py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-primary hover:opacity-80">
-            TutorAtlas
+            Tutor Atlas
           </Link>
           <nav className="flex gap-6">
             <Link href="/" className="text-sm hover:text-primary transition-colors">
@@ -31,7 +31,7 @@ export default function Privacy() {
           </p>
 
           <p className="mb-6">
-            TutorAtlas ("we", "us", or "our") respects your privacy. This Privacy Policy / Data Protection Notice explains how we collect, use, disclose and protect your personal data when you visit our website at <strong>{WEBSITE_URL}</strong> and when you submit your details for early access, interviews, or updates.
+            Tutor Atlas ("we", "us", or "our") respects your privacy. This Privacy Policy / Data Protection Notice explains how we collect, use, disclose and protect your personal data when you visit our website at <strong>{WEBSITE_URL}</strong> and when you submit your details for early access, interviews, or updates.
           </p>
 
           <p className="mb-8 text-sm italic">
@@ -117,7 +117,7 @@ export default function Privacy() {
           <p className="mb-4">For questions about this notice, please contact:</p>
           <div className="bg-muted p-4 rounded mb-8">
             <p className="mb-2">
-              <strong>TutorAtlas Contact Email:</strong> <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary hover:underline">{CONTACT_EMAIL}</a>
+              <strong>Tutor Atlas Contact Email:</strong> <a href={`mailto:${CONTACT_EMAIL}`} className="text-primary hover:underline">{CONTACT_EMAIL}</a>
             </p>
             <p>
               <strong>Data Protection Officer:</strong> <a href={`mailto:${DPO_EMAIL}`} className="text-primary hover:underline">{DPO_EMAIL}</a>
@@ -137,7 +137,7 @@ export default function Privacy() {
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container text-center text-sm">
-          <p>&copy; 2025 TutorAtlas. All rights reserved.</p>
+          <p>&copy; 2025 Tutor Atlas. All rights reserved.</p>
         </div>
       </footer>
     </div>

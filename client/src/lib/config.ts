@@ -1,5 +1,5 @@
 /**
- * TutorAtlas Configuration
+ * Tutor Atlas Configuration
  * Single source of truth for contact details and site configuration
  */
 
@@ -9,7 +9,7 @@ export const WEBSITE_URL = "https://tutoratlas.manus.space";
 export const EFFECTIVE_DATE = "January 2025";
 
 export const BRAND = {
-  name: "TutorAtlas",
+  name: "Tutor Atlas",
   tagline: "AI workspace for home tutors",
   description: "Save time, stay fuss-free, focus on teaching.",
 };

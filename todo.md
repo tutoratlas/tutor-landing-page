@@ -58,3 +58,7 @@
 - [x] Update landing page copy to reflect full-time tutor insights
 - [x] Fix logo background (remove white border from top left)
 - [x] Test all changes and save checkpoint (all 10 tests passing, logo transparent, copy updated)
+
+## Brand Name Correction
+- [x] Update all instances of "TutorAtlas" to "Tutor Atlas" (two words) in landing page
+- [x] Test and save checkpoint (all 10 tests passing)

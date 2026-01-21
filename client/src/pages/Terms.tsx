@@ -8,7 +8,7 @@ export default function Terms() {
       <header className="sticky top-0 z-50 bg-white border-b border-border">
         <div className="container py-4 flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-primary hover:opacity-80">
-            TutorAtlas
+            Tutor Atlas
           </Link>
           <nav className="flex gap-6">
             <Link href="/" className="text-sm hover:text-primary transition-colors">
@@ -28,7 +28,7 @@ export default function Terms() {
           </p>
 
           <p className="mb-8">
-            These Terms of Use ("Terms") govern your access to and use of the TutorAtlas website at <strong>{WEBSITE_URL}</strong> (the "Site"). By accessing or using the Site, you agree to these Terms.
+            These Terms of Use ("Terms") govern your access to and use of the Tutor Atlas website at <strong>{WEBSITE_URL}</strong> (the "Site"). By accessing or using the Site, you agree to these Terms.
           </p>
 
           <p className="mb-8 font-semibold">
@@ -37,8 +37,8 @@ export default function Terms() {
 
           <hr className="my-8" />
 
-          <h2 className="text-2xl font-bold mt-10 mb-4">1. About TutorAtlas</h2>
-          <p className="mb-6">TutorAtlas is currently in concept validation and early access stage. The Site provides information about TutorAtlas and allows you to submit your details for early access, interviews, and related updates.</p>
+          <h2 className="text-2xl font-bold mt-10 mb-4">1. About Tutor Atlas</h2>
+          <p className="mb-6">Tutor Atlas is currently in concept validation and early access stage. The Site provides information about Tutor Atlas and allows you to submit your details for early access, interviews, and related updates.</p>
 
           <h2 className="text-2xl font-bold mt-10 mb-4">2. Use of the Site</h2>
           <p className="mb-4">You agree to use the Site lawfully and not to:</p>
@@ -53,7 +53,7 @@ export default function Terms() {
           <p className="mb-6">Submitting your details does not guarantee admission into any early access program. We may select participants based on availability and research needs.</p>
 
           <h2 className="text-2xl font-bold mt-10 mb-4">4. Intellectual property</h2>
-          <p className="mb-6">All content on the Site (including text, logos, and designs) is owned by or licensed to TutorAtlas and is protected by applicable laws. You may not reproduce or distribute Site content without our permission, except for personal, non-commercial viewing.</p>
+          <p className="mb-6">All content on the Site (including text, logos, and designs) is owned by or licensed to Tutor Atlas and is protected by applicable laws. You may not reproduce or distribute Site content without our permission, except for personal, non-commercial viewing.</p>
 
           <h2 className="text-2xl font-bold mt-10 mb-4">5. No professional advice</h2>
           <p className="mb-6">The Site is provided for general informational purposes only. Nothing on the Site constitutes professional advice.</p>
@@ -67,7 +67,7 @@ export default function Terms() {
           <p className="mb-6">Where the Site references commute estimates (e.g., in product descriptions), such estimates are illustrative and may vary based on real-world conditions and third-party data sources.</p>
 
           <h2 className="text-2xl font-bold mt-10 mb-4">7. Limitation of liability</h2>
-          <p className="mb-6">To the maximum extent permitted by law, TutorAtlas will not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenue, arising from or related to your use of the Site.</p>
+          <p className="mb-6">To the maximum extent permitted by law, Tutor Atlas will not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenue, arising from or related to your use of the Site.</p>
 
           <h2 className="text-2xl font-bold mt-10 mb-4">8. Privacy</h2>
           <p className="mb-6">Your submission of personal data is governed by our Privacy Policy / Data Protection Notice at <Link href="/privacy" className="text-primary hover:underline">/privacy</Link>, which is incorporated into these Terms by reference.</p>
@@ -99,7 +99,7 @@ export default function Terms() {
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 mt-16">
         <div className="container text-center text-sm">
-          <p>&copy; 2025 TutorAtlas. All rights reserved.</p>
+          <p>&copy; 2025 Tutor Atlas. All rights reserved.</p>
         </div>
       </footer>
     </div>

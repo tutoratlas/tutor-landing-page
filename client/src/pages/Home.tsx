@@ -137,7 +137,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <img 
               src="/images/tutoratlas_logo_horizontal.png" 
-              alt="TutorAtlas" 
+              alt="Tutor Atlas" 
               className="h-8"
             />
           </div>
@@ -186,7 +186,7 @@ export default function Home() {
               </p>
 
               <p className="text-base text-muted-foreground">
-                TutorAtlas is built to make your day <span className="font-semibold text-foreground">fuss-free</span> so you can focus on what you do best: <span className="font-semibold text-foreground">teaching</span>.
+                Tutor Atlas is built to make your day <span className="font-semibold text-foreground">fuss-free</span> so you can focus on what you do best: <span className="font-semibold text-foreground">teaching</span>.
               </p>
 
               {/* CTA */}
@@ -211,7 +211,7 @@ export default function Home() {
               <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   src="/images/solution-illustration.jpg"
-                  alt="TutorAtlas workspace"
+                  alt="Tutor Atlas workspace"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -226,7 +226,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-bold">Who is this for?</h2>
-              <p className="text-muted-foreground">Pick your mode to see how TutorAtlas fits your workflow</p>
+              <p className="text-muted-foreground">Pick your mode to see how Tutor Atlas fits your workflow</p>
             </div>
 
             {/* Persona Tabs */}
@@ -365,7 +365,7 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">What changes with TutorAtlas</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">What changes with Tutor Atlas</h2>
               <p className="text-xl text-muted-foreground">
                 A tutor workstation that removes the repetitive, low-value work
               </p>
@@ -597,7 +597,7 @@ export default function Home() {
             <div className="text-center space-y-4">
               <h2 className="text-3xl md:text-4xl font-bold">What we're NOT promising</h2>
               <p className="text-xl text-muted-foreground">
-                Honest about what TutorAtlas does (and doesn't) do
+                Honest about what Tutor Atlas does (and doesn't) do
               </p>
             </div>
 
@@ -605,7 +605,7 @@ export default function Home() {
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold">❌ We do NOT guarantee placements</h3>
                 <p className="text-sm text-muted-foreground">
-                  TutorAtlas is a workstation that reduces wasted effort and increases hit-rate through better filtering, faster applying, and clearer commute fit. We don't promise guaranteed students or earnings.
+                  Tutor Atlas is a workstation that reduces wasted effort and increases hit-rate through better filtering, faster applying, and clearer commute fit. We don't promise guaranteed students or earnings.
                 </p>
               </div>
 
@@ -645,7 +645,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-semibold">Early access</h3>
                 <p className="text-sm text-muted-foreground">
-                  Be among the first to use TutorAtlas before public launch
+                  Be among the first to use Tutor Atlas before public launch
                 </p>
               </div>
 
@@ -719,7 +719,7 @@ export default function Home() {
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold">Agencies already exist. Why is this different?</h3>
                 <p className="text-sm text-muted-foreground">
-                  TutorAtlas sits on top of existing channels (Telegram, agencies). You keep your options. We remove friction and increase professionalism. Think of it as a workstation, not a replacement.
+                  Tutor Atlas sits on top of existing channels (Telegram, agencies). You keep your options. We remove friction and increase professionalism. Think of it as a workstation, not a replacement.
                 </p>
               </div>
 
@@ -948,7 +948,7 @@ export default function Home() {
                         onCheckedChange={(checked) => handleCheckboxChange("receiveUpdates", checked as boolean)}
                       />
                       <Label htmlFor="receiveUpdates" className="text-sm font-normal leading-relaxed cursor-pointer">
-                        Keep me updated on TutorAtlas progress
+                        Keep me updated on Tutor Atlas progress
                       </Label>
                     </div>
                   </div>
@@ -987,7 +987,7 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <img 
                 src="/images/tutoratlas_logo_horizontal.png" 
-                alt="TutorAtlas" 
+                alt="Tutor Atlas" 
                 className="h-6"
               />
             </div>
@@ -1004,7 +1004,7 @@ export default function Home() {
             </div>
           </div>
           <div className="text-center mt-8 text-sm text-muted-foreground">
-            <p>© 2026 TutorAtlas. Built for Singapore home tutors.</p>
+            <p>© 2026 Tutor Atlas. Built for Singapore home tutors.</p>
           </div>
         </div>
       </footer>
