@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { CONTACT_EMAIL } from "@/lib/config";
-import { ChevronDown, Mail, MessageCircle, CheckCircle2, Clock, MapPin, Star } from "lucide-react";
+import { ChevronDown, Mail, MessageCircle, CheckCircle2, Clock, MapPin, Star, Menu, X } from "lucide-react";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -37,6 +37,7 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<"part-time" | "full-time" | "centre">("part-time");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const submitFormMutation = trpc.form.submit.useMutation({
     onSuccess: () => {
@@ -141,6 +142,8 @@ export default function Home() {
               className="h-8"
             />
           </div>
+          
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-6">
             <a href="#solution" className="text-sm font-medium hover:text-primary transition-colors">
               Solution
@@ -158,12 +161,75 @@ export default function Home() {
               FAQ
             </a>
           </nav>
-          <a href="#join">
+          
+          {/* Desktop Join Button */}
+          <a href="#join" className="hidden md:block">
             <Button variant="default" size="sm">
               Join
             </Button>
           </a>
+          
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 hover:bg-accent/10 rounded-md transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
+        
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t bg-background">
+            <nav className="container py-4 flex flex-col gap-4">
+              <a 
+                href="#solution" 
+                className="text-sm font-medium hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Solution
+              </a>
+              <a 
+                href="#features" 
+                className="text-sm font-medium hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Features
+              </a>
+              <a 
+                href="#outcomes" 
+                className="text-sm font-medium hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Outcomes
+              </a>
+              <a 
+                href="#cohort" 
+                className="text-sm font-medium hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Founding Cohort
+              </a>
+              <a 
+                href="#faq" 
+                className="text-sm font-medium hover:text-primary transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                FAQ
+              </a>
+              <a href="#join" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="default" size="sm" className="w-full">
+                  Join Early Access
+                </Button>
+              </a>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}

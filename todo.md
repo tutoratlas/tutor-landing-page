@@ -114,3 +114,15 @@
 - [x] Ensure all CTA buttons scroll smoothly to the founding cohort form
 - [x] Test page flow and button functionality (all 12 tests passing)
 - [x] Save checkpoint
+
+## Mobile Hamburger Menu
+- [x] Add hamburger icon (Menu icon from lucide-react)
+- [x] Implement mobile menu state management (open/close)
+- [x] Create mobile navigation overlay/dropdown
+- [x] Add smooth animations for menu open/close (conditional rendering)
+- [x] Hide desktop navigation links on mobile, show hamburger instead
+- [x] Ensure all navigation links work in mobile menu
+- [x] Add close button (X icon toggles menu)
+- [x] Add click-on-link-to-close functionality
+- [x] Test functionality (all 12 tests passing)
+- [x] Save checkpoint
