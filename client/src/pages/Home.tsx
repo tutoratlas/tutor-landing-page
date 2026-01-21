@@ -345,22 +345,22 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="rounded-xl overflow-hidden shadow-lg">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-full max-w-[280px] md:max-w-[320px] rounded-xl overflow-hidden shadow-lg">
                   <img
                     src="/images/telegram-blast-screenshot.png"
                     alt="Telegram tuition assignment blasts showing 60+ messages"
                     className="w-full h-auto"
                   />
                 </div>
-                <div className="rounded-xl overflow-hidden shadow-lg">
+                <div className="w-full max-w-[280px] md:max-w-[320px] rounded-xl overflow-hidden shadow-lg">
                   <img
                     src="/images/google-form-screenshot.png"
                     alt="Typical Google Form requiring repetitive data entry"
                     className="w-full h-auto"
                   />
                 </div>
-                <p className="text-xs text-center text-muted-foreground italic">
+                <p className="text-xs text-center text-muted-foreground italic max-w-[320px]">
                   The current reality: high volume, low signal, zero transparency
                 </p>
               </div>
