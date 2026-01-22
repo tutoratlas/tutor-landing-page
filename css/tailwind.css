@@ -172,6 +172,39 @@
     min-width: 0;
   }
 
+  .form-checkbox {
+    appearance: none;
+    @apply relative size-4 shrink-0 rounded border border-input bg-transparent transition-[background-color,border-color] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px];
+  }
+
+  .form-checkbox::after {
+    content: "";
+    position: absolute;
+    inset: 0.15rem 0.1rem 0.1rem 0.35rem;
+    width: 0.35rem;
+    height: 0.75rem;
+    border: solid transparent;
+    border-width: 0 0.15rem 0.15rem 0;
+    transform: rotate(45deg) scale(0);
+    transform-origin: center;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .form-checkbox:checked {
+    @apply bg-primary border-primary;
+  }
+
+  .form-checkbox:checked::after {
+    border-color: var(--primary-foreground);
+    transform: rotate(45deg) scale(1);
+  }
+
+  .form-checkbox:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
   @media (min-width: 640px) {
     .container {
       padding-left: 1.5rem; /* 24px - tablet padding */
