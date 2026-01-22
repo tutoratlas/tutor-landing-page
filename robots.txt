@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /internal
+Disallow: /api
+
+Sitemap: https://tutor.tutoratlas.sg/sitemap.xml
