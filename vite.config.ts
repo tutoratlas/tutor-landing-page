@@ -7,7 +7,7 @@ const plugins = [react(), tailwindcss()];
 
 export default defineConfig({
   plugins,
-  base: process.env.NODE_ENV === 'production' ? '/tutor-landing-page/' : './', 
+  base: '/', 
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
