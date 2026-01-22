@@ -13,9 +13,18 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Link } from "wouter";
-import { trpc } from "@/lib/trpc";
-import { CONTACT_EMAIL } from "@/lib/config";
-import { ChevronDown, Mail, MessageCircle, CheckCircle2, Clock, MapPin, Star, Menu, X } from "lucide-react";
+import { CONTACT_EMAIL, GOOGLE_APPS_SCRIPT_URL } from "@/lib/config";
+import {
+  ChevronDown,
+  Mail,
+  MessageCircle,
+  CheckCircle2,
+  Clock,
+  MapPin,
+  Star,
+  Menu,
+  X,
+} from "lucide-react";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -36,11 +45,60 @@ export default function Home() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [selectedPersona, setSelectedPersona] = useState<"part-time" | "full-time" | "centre">("part-time");
+  const [selectedPersona, setSelectedPersona] = useState<
+    "part-time" | "full-time" | "centre"
+  >("part-time");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const submitFormMutation = trpc.form.submit.useMutation({
-    onSuccess: () => {
+  const submitForm = async (data: typeof formData) => {
+    if (!GOOGLE_APPS_SCRIPT_URL) {
+      throw new Error(
+        "Form submission is not configured. Please set GOOGLE_APPS_SCRIPT_URL in config."
+      );
+    }
+
+    await fetch(GOOGLE_APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8",
+      },
+      body: JSON.stringify(data),
+    });
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (name: string, checked: boolean) => {
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const validateForm = () => {
+    const hasContact = formData.whatsapp || formData.email;
+    if (!formData.name || !hasContact) {
+      toast.error(
+        "Please provide your name and at least one contact method (WhatsApp or Email)"
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setIsSubmitting(true);
+    try {
+      await submitForm(formData);
       setFormSubmitted(true);
       toast.success("Thank you! We'll be in touch within 48 hours.");
       setTimeout(() => {
@@ -61,40 +119,12 @@ export default function Home() {
         });
         setFormSubmitted(false);
       }, 3000);
-    },
-    onError: (error) => {
-      toast.error(error.message || "Something went wrong. Please try again.");
-    },
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCheckboxChange = (name: string, checked: boolean) => {
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  };
-
-  const validateForm = () => {
-    const hasContact = formData.whatsapp || formData.email;
-    if (!formData.name || !hasContact) {
-      toast.error("Please provide your name and at least one contact method (WhatsApp or Email)");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-    setIsSubmitting(true);
-    try {
-      await submitFormMutation.mutateAsync(formData);
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -106,28 +136,30 @@ export default function Home() {
       benefits: [
         "Find the 3 suitable assignments from 60 daily Telegram blasts",
         "Know commute fit instantly—no more manual postal code mapping",
-        "Stop getting ghosted after repetitive form submissions"
+        "Stop getting ghosted after repetitive form submissions",
       ],
-      target: "Target: Cut lead sifting time by 50–80%"
+      target: "Target: Cut lead sifting time by 50–80%",
     },
     "full-time": {
-      subhead: "Payment chasing steals your time. Scheduling is second. You need centre-level polish without centre overhead.",
+      subhead:
+        "Payment chasing steals your time. Scheduling is second. You need centre-level polish without centre overhead.",
       benefits: [
         "Get paid without chasing: lesson + payment log in seconds (pilot)",
         "Multi-stop schedule sanity: commute-fit and route viability before you apply",
-        "Compete with centres at the same price—without hiring staff"
+        "Compete with centres at the same price—without hiring staff",
       ],
-      target: "Target: Reduce payment chasing time by 40–60% (pilot)"
+      target: "Target: Reduce payment chasing time by 40–60% (pilot)",
     },
-    "centre": {
-      subhead: "Owner-operator juggling teaching + enquiries + scheduling + admin.",
+    centre: {
+      subhead:
+        "Owner-operator juggling teaching + enquiries + scheduling + admin.",
       benefits: [
         "Capture enquiries and schedule trials with fewer message loops (pilot)",
         "See your week's timetable at a glance, including reschedules (pilot)",
-        "Standardize parent updates so quality scales beyond you (pilot)"
+        "Standardize parent updates so quality scales beyond you (pilot)",
       ],
-      target: "Target: Reduce parent coordination time by 30–50% (pilot)"
-    }
+      target: "Target: Reduce parent coordination time by 30–50% (pilot)",
+    },
   };
 
   return (
@@ -136,39 +168,54 @@ export default function Home() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <img 
-              src="/images/tutoratlas_logo_horizontal.png" 
-              alt="Tutor Atlas" 
+            <img
+              src="/images/tutoratlas_logo_horizontal.png"
+              alt="Tutor Atlas"
               className="h-8"
             />
           </div>
-          
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-6">
-            <a href="#solution" className="text-sm font-medium hover:text-primary transition-colors">
+            <a
+              href="#solution"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Solution
             </a>
-            <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
+            <a
+              href="#features"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Features
             </a>
-            <a href="#outcomes" className="text-sm font-medium hover:text-primary transition-colors">
+            <a
+              href="#outcomes"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Outcomes
             </a>
-            <a href="#cohort" className="text-sm font-medium hover:text-primary transition-colors">
+            <a
+              href="#cohort"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Founding Cohort
             </a>
-            <a href="#faq" className="text-sm font-medium hover:text-primary transition-colors">
+            <a
+              href="#faq"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               FAQ
             </a>
           </nav>
-          
+
           {/* Desktop Join Button */}
           <a href="#join" className="hidden md:block">
             <Button variant="default" size="sm">
               Join
             </Button>
           </a>
-          
+
           {/* Mobile Menu Button */}
           <button
             className="md:hidden p-2 hover:bg-accent/10 rounded-md transition-colors"
@@ -182,41 +229,41 @@ export default function Home() {
             )}
           </button>
         </div>
-        
+
         {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t bg-background">
             <nav className="container py-4 flex flex-col gap-4">
-              <a 
-                href="#solution" 
+              <a
+                href="#solution"
                 className="text-sm font-medium hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Solution
               </a>
-              <a 
-                href="#features" 
+              <a
+                href="#features"
                 className="text-sm font-medium hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Features
               </a>
-              <a 
-                href="#outcomes" 
+              <a
+                href="#outcomes"
                 className="text-sm font-medium hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Outcomes
               </a>
-              <a 
-                href="#cohort" 
+              <a
+                href="#cohort"
                 className="text-sm font-medium hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Founding Cohort
               </a>
-              <a 
-                href="#faq" 
+              <a
+                href="#faq"
                 className="text-sm font-medium hover:text-primary transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -248,11 +295,16 @@ export default function Home() {
               </h1>
 
               <p className="text-xl text-muted-foreground leading-relaxed">
-                An AI concierge that gives Singapore home tutors more time to be the mentor their students need—not scrolling Telegram or filling forms.
+                An AI concierge that gives Singapore home tutors more time to be
+                the mentor their students need—not scrolling Telegram or filling
+                forms.
               </p>
 
               <p className="text-base text-muted-foreground">
-                Tutor Atlas is built to make your day <span className="font-semibold text-foreground">fuss-free</span> so you can focus on what you do best: <span className="font-semibold text-foreground">teaching</span>.
+                Tutor Atlas is built to make your day{" "}
+                <span className="font-semibold text-foreground">fuss-free</span>{" "}
+                so you can focus on what you do best:{" "}
+                <span className="font-semibold text-foreground">teaching</span>.
               </p>
 
               {/* CTA */}
@@ -268,7 +320,8 @@ export default function Home() {
               </div>
 
               <p className="text-xs text-muted-foreground pt-4">
-                Built for Singapore home tutors. Early access is limited to a small founding cohort.
+                Built for Singapore home tutors. Early access is limited to a
+                small founding cohort.
               </p>
             </div>
 
@@ -292,20 +345,26 @@ export default function Home() {
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl font-bold">Who is this for?</h2>
-              <p className="text-muted-foreground">Pick your mode to see how Tutor Atlas fits your workflow</p>
+              <p className="text-muted-foreground">
+                Pick your mode to see how Tutor Atlas fits your workflow
+              </p>
             </div>
 
             {/* Persona Tabs */}
             <div className="flex flex-wrap gap-3 justify-center">
               <Button
-                variant={selectedPersona === "part-time" ? "default" : "outline"}
+                variant={
+                  selectedPersona === "part-time" ? "default" : "outline"
+                }
                 onClick={() => setSelectedPersona("part-time")}
                 className="flex-1 sm:flex-none"
               >
                 Part-time Tutor
               </Button>
               <Button
-                variant={selectedPersona === "full-time" ? "default" : "outline"}
+                variant={
+                  selectedPersona === "full-time" ? "default" : "outline"
+                }
                 onClick={() => setSelectedPersona("full-time")}
                 className="flex-1 sm:flex-none"
               >
@@ -326,15 +385,19 @@ export default function Home() {
                 {personaContent[selectedPersona].subhead}
               </p>
               <ul className="space-y-3 mb-6">
-                {personaContent[selectedPersona].benefits.map((benefit, idx) => (
-                  <li key={idx} className="flex gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span>{benefit}</span>
-                  </li>
-                ))}
+                {personaContent[selectedPersona].benefits.map(
+                  (benefit, idx) => (
+                    <li key={idx} className="flex gap-3">
+                      <CheckCircle2 className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                      <span>{benefit}</span>
+                    </li>
+                  )
+                )}
               </ul>
               <div className="pt-4 border-t">
-                <p className="text-sm font-medium text-accent">{personaContent[selectedPersona].target}</p>
+                <p className="text-sm font-medium text-accent">
+                  {personaContent[selectedPersona].target}
+                </p>
               </div>
             </div>
           </div>
@@ -346,7 +409,9 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">Today's workflow is broken</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Today's workflow is broken
+              </h2>
               <p className="text-xl text-muted-foreground">
                 Scroll, sift, retype, wait, get ghosted—repeat
               </p>
@@ -361,9 +426,12 @@ export default function Home() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">~60 Telegram blasts daily</h3>
+                    <h3 className="font-semibold mb-2">
+                      ~60 Telegram blasts daily
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      But only ~3 suitable assignments every 2 weeks for a constrained tutor
+                      But only ~3 suitable assignments every 2 weeks for a
+                      constrained tutor
                     </p>
                   </div>
                 </div>
@@ -377,7 +445,8 @@ export default function Home() {
                   <div>
                     <h3 className="font-semibold mb-2">Repetitive form spam</h3>
                     <p className="text-sm text-muted-foreground">
-                      Re-enter the same details (name, phone, availability, rate) for every Google Form
+                      Re-enter the same details (name, phone, availability,
+                      rate) for every Google Form
                     </p>
                   </div>
                 </div>
@@ -389,9 +458,12 @@ export default function Home() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">0–1 replies is common</h3>
+                    <h3 className="font-semibold mb-2">
+                      0–1 replies is common
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Even after effort spent applying, you often hear nothing back
+                      Even after effort spent applying, you often hear nothing
+                      back
                     </p>
                   </div>
                 </div>
@@ -403,7 +475,9 @@ export default function Home() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-2">Postal code guesswork</h3>
+                    <h3 className="font-semibold mb-2">
+                      Postal code guesswork
+                    </h3>
                     <p className="text-sm text-muted-foreground">
                       Manual map checks to assess if commute fits your schedule
                     </p>
@@ -432,7 +506,8 @@ export default function Home() {
                 </div>
                 <div className="sm:col-span-2 text-center">
                   <p className="text-xs text-muted-foreground italic">
-                    The current reality: high volume, low signal, zero transparency
+                    The current reality: high volume, low signal, zero
+                    transparency
                   </p>
                 </div>
               </div>
@@ -443,7 +518,9 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={() => {
-                  document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+                  document
+                    .getElementById("join")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
               >
@@ -459,7 +536,9 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">What changes with Tutor Atlas</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                What changes with Tutor Atlas
+              </h2>
               <p className="text-xl text-muted-foreground">
                 A tutor workstation that removes the repetitive, low-value work
               </p>
@@ -470,19 +549,28 @@ export default function Home() {
                 <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
                   <Star className="h-6 w-6 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold">AI Assignment Concierge</h3>
+                <h3 className="text-xl font-semibold">
+                  AI Assignment Concierge
+                </h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Set preferences once (subjects, levels, locations, time windows, rate floor)</span>
+                    <span>
+                      Set preferences once (subjects, levels, locations, time
+                      windows, rate floor)
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Get 3–5 curated matches instead of scrolling 60 posts</span>
+                    <span>
+                      Get 3–5 curated matches instead of scrolling 60 posts
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>One-tap apply from your saved profile—no retyping</span>
+                    <span>
+                      One-tap apply from your saved profile—no retyping
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -495,11 +583,15 @@ export default function Home() {
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Convert postal codes into real commute estimates</span>
+                    <span>
+                      Convert postal codes into real commute estimates
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>"Fits your schedule?" check with travel time buffer</span>
+                    <span>
+                      "Fits your schedule?" check with travel time buffer
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
@@ -512,19 +604,27 @@ export default function Home() {
                 <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
                   <Star className="h-6 w-6 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold">Payment & Terms Transparency</h3>
+                <h3 className="text-xl font-semibold">
+                  Payment & Terms Transparency
+                </h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>See payment terms and any fees/commissions upfront</span>
+                    <span>
+                      See payment terms and any fees/commissions upfront
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>"Net hourly" estimator (after commute + any stated fees)</span>
+                    <span>
+                      "Net hourly" estimator (after commute + any stated fees)
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Know payment expectations before chasing for your money</span>
+                    <span>
+                      Know payment expectations before chasing for your money
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -554,15 +654,22 @@ export default function Home() {
                 <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
                   <Star className="h-6 w-6 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold">Verified Reviews (Pilot)</h3>
+                <h3 className="text-xl font-semibold">
+                  Verified Reviews (Pilot)
+                </h3>
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Credible proof layer so your results speak louder than labels</span>
+                    <span>
+                      Credible proof layer so your results speak louder than
+                      labels
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
-                    <span>Verification, moderation, and dispute process included</span>
+                    <span>
+                      Verification, moderation, and dispute process included
+                    </span>
                   </li>
                   <li className="flex gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent shrink-0 mt-0.5" />
@@ -626,12 +733,15 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">Target outcomes</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Target outcomes
+              </h2>
               <p className="text-xl text-muted-foreground">
                 Beta benchmarks we'll measure with the founding cohort
               </p>
               <p className="text-sm text-muted-foreground italic">
-                These are targets, not guarantees. We're validating them together.
+                These are targets, not guarantees. We're validating them
+                together.
               </p>
             </div>
 
@@ -639,7 +749,9 @@ export default function Home() {
               <div className="bg-card rounded-xl p-6 shadow-sm border">
                 <div className="flex items-baseline gap-2 mb-2">
                   <span className="text-4xl font-bold text-accent">50–80%</span>
-                  <span className="text-sm text-muted-foreground">reduction</span>
+                  <span className="text-sm text-muted-foreground">
+                    reduction
+                  </span>
                 </div>
                 <p className="text-sm font-medium">Lead sifting time</p>
                 <p className="text-xs text-muted-foreground mt-2">
@@ -649,8 +761,12 @@ export default function Home() {
 
               <div className="bg-card rounded-xl p-6 shadow-sm border">
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-bold text-accent">&lt;60s</span>
-                  <span className="text-sm text-muted-foreground">per lead</span>
+                  <span className="text-4xl font-bold text-accent">
+                    &lt;60s
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    per lead
+                  </span>
                 </div>
                 <p className="text-sm font-medium">Application time</p>
                 <p className="text-xs text-muted-foreground mt-2">
@@ -660,8 +776,12 @@ export default function Home() {
 
               <div className="bg-card rounded-xl p-6 shadow-sm border">
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-bold text-accent">&lt;15s</span>
-                  <span className="text-sm text-muted-foreground">decision</span>
+                  <span className="text-4xl font-bold text-accent">
+                    &lt;15s
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    decision
+                  </span>
                 </div>
                 <p className="text-sm font-medium">Commute-fit check</p>
                 <p className="text-xs text-muted-foreground mt-2">
@@ -672,7 +792,9 @@ export default function Home() {
               <div className="bg-card rounded-xl p-6 shadow-sm border">
                 <div className="flex items-baseline gap-2 mb-2">
                   <span className="text-4xl font-bold text-accent">30–60%</span>
-                  <span className="text-sm text-muted-foreground">reduction</span>
+                  <span className="text-sm text-muted-foreground">
+                    reduction
+                  </span>
                 </div>
                 <p className="text-sm font-medium">Dead-end applications</p>
                 <p className="text-xs text-muted-foreground mt-2">
@@ -686,7 +808,9 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={() => {
-                  document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+                  document
+                    .getElementById("join")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
               >
@@ -701,23 +825,31 @@ export default function Home() {
       <section className="py-20 bg-background">
         <div className="container">
           <div className="max-w-5xl mx-auto space-y-12">
-              <div className="text-center space-y-4">
-                <h2 className="text-3xl md:text-4xl font-bold">What tutors are saying</h2>
-                <p className="text-xl text-muted-foreground">
-                  Common challenges from Singapore home tutors
-                </p>
-              </div>
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold">
+                What tutors are saying
+              </h2>
+              <p className="text-xl text-muted-foreground">
+                Common challenges from Singapore home tutors
+              </p>
+            </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {/* Payment Chasing - Glo */}
               <div className="bg-card p-8 rounded-lg border space-y-4">
                 <div className="text-4xl text-primary">"</div>
                 <blockquote className="text-lg leading-relaxed">
-                  Chasing payments is my biggest headache. I track everything carefully, but parents sometimes dispute which lessons happened. It's exhausting to reconcile at month-end.
+                  Chasing payments is my biggest headache. I track everything
+                  carefully, but parents sometimes dispute which lessons
+                  happened. It's exhausting to reconcile at month-end.
                 </blockquote>
                 <div className="pt-4 border-t">
-                  <p className="font-medium">Full-time English & Math tutor in her 30s</p>
-                  <p className="text-sm text-muted-foreground">10 years of experience</p>
+                  <p className="font-medium">
+                    Full-time English & Math tutor in her 30s
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    10 years of experience
+                  </p>
                 </div>
               </div>
 
@@ -725,11 +857,15 @@ export default function Home() {
               <div className="bg-card p-8 rounded-lg border space-y-4">
                 <div className="text-4xl text-primary">"</div>
                 <blockquote className="text-lg leading-relaxed">
-                  I spend half my day traveling between students. Agencies give postal codes, but I can't tell if locations are actually close until I map them out. Long commutes eat into my earnings.
+                  I spend half my day traveling between students. Agencies give
+                  postal codes, but I can't tell if locations are actually close
+                  until I map them out. Long commutes eat into my earnings.
                 </blockquote>
                 <div className="pt-4 border-t">
                   <p className="font-medium">Full-time tutor in his 20s</p>
-                  <p className="text-sm text-muted-foreground">Multiple subjects across primary to JC</p>
+                  <p className="text-sm text-muted-foreground">
+                    Multiple subjects across primary to JC
+                  </p>
                 </div>
               </div>
 
@@ -737,11 +873,17 @@ export default function Home() {
               <div className="bg-card p-8 rounded-lg border space-y-4">
                 <div className="text-4xl text-primary">"</div>
                 <blockquote className="text-lg leading-relaxed">
-                  My day job runs late sometimes, making me rush to evening lessons. When students drop out, I'm back to filling forms and applying all over again.
+                  My day job runs late sometimes, making me rush to evening
+                  lessons. When students drop out, I'm back to filling forms and
+                  applying all over again.
                 </blockquote>
                 <div className="pt-4 border-t">
-                  <p className="font-medium">Part-time English, Math & Science tutor in her 30s</p>
-                  <p className="text-sm text-muted-foreground">Tutoring since 2017 while working full-time</p>
+                  <p className="font-medium">
+                    Part-time English, Math & Science tutor in her 30s
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Tutoring since 2017 while working full-time
+                  </p>
                 </div>
               </div>
             </div>
@@ -749,9 +891,15 @@ export default function Home() {
             {/* Additional context about tuition centers */}
             <div className="bg-muted/50 p-8 rounded-lg border-l-4 border-primary">
               <p className="text-lg leading-relaxed italic">
-                "Parents compare us to big tuition centers that have more resources and materials. It's hard to compete on price, and once you set a rate with a student, it's awkward to raise it later. Our edge is personalization, but we need to communicate that value better."
+                "Parents compare us to big tuition centers that have more
+                resources and materials. It's hard to compete on price, and once
+                you set a rate with a student, it's awkward to raise it later.
+                Our edge is personalization, but we need to communicate that
+                value better."
               </p>
-              <p className="mt-4 text-sm text-muted-foreground">— Full-time tutor on competing with tuition centers</p>
+              <p className="mt-4 text-sm text-muted-foreground">
+                — Full-time tutor on competing with tuition centers
+              </p>
             </div>
 
             {/* CTA after testimonials */}
@@ -759,7 +907,9 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={() => {
-                  document.getElementById('join')?.scrollIntoView({ behavior: 'smooth' });
+                  document
+                    .getElementById("join")
+                    ?.scrollIntoView({ behavior: "smooth" });
                 }}
                 className="bg-accent hover:bg-accent/90 text-white px-8 py-6 text-lg"
               >
@@ -775,7 +925,9 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">What we're NOT promising</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                What we're NOT promising
+              </h2>
               <p className="text-xl text-muted-foreground">
                 Honest about what Tutor Atlas does (and doesn't) do
               </p>
@@ -783,23 +935,36 @@ export default function Home() {
 
             <div className="bg-card rounded-xl p-8 shadow-sm border space-y-6">
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">❌ We do NOT guarantee placements</h3>
+                <h3 className="text-lg font-semibold">
+                  ❌ We do NOT guarantee placements
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  Tutor Atlas is a workstation that reduces wasted effort and increases hit-rate through better filtering, faster applying, and clearer commute fit. We don't promise guaranteed students or earnings.
+                  Tutor Atlas is a workstation that reduces wasted effort and
+                  increases hit-rate through better filtering, faster applying,
+                  and clearer commute fit. We don't promise guaranteed students
+                  or earnings.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">✅ We DO reduce friction and uncertainty</h3>
+                <h3 className="text-lg font-semibold">
+                  ✅ We DO reduce friction and uncertainty
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  By sitting on top of how you already operate (Telegram, WhatsApp, Maps), we remove the repetitive, low-value work so you can focus on teaching.
+                  By sitting on top of how you already operate (Telegram,
+                  WhatsApp, Maps), we remove the repetitive, low-value work so
+                  you can focus on teaching.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">🔒 Reviews have safeguards</h3>
+                <h3 className="text-lg font-semibold">
+                  🔒 Reviews have safeguards
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  Verified-only, moderation, right-to-respond, and dispute workflow (pilot rules). We're building this carefully with the founding cohort.
+                  Verified-only, moderation, right-to-respond, and dispute
+                  workflow (pilot rules). We're building this carefully with the
+                  founding cohort.
                 </p>
               </div>
             </div>
@@ -812,7 +977,9 @@ export default function Home() {
         <div className="container">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">Join the founding cohort</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Join the founding cohort
+              </h2>
               <p className="text-xl text-muted-foreground">
                 Early access + influence the roadmap + founder-tier benefits
               </p>
@@ -852,7 +1019,10 @@ export default function Home() {
 
             <div className="bg-card rounded-xl p-6 shadow-sm border">
               <p className="text-sm text-muted-foreground text-center">
-                <strong>What we ask:</strong> Honest feedback, willingness to test features, and help us understand what actually works for your workflow. If you know 1–2 other tutors who'd benefit, we'd love an introduction.
+                <strong>What we ask:</strong> Honest feedback, willingness to
+                test features, and help us understand what actually works for
+                your workflow. If you know 1–2 other tutors who'd benefit, we'd
+                love an introduction.
               </p>
             </div>
           </div>
@@ -864,49 +1034,84 @@ export default function Home() {
         <div className="container">
           <div className="max-w-3xl mx-auto space-y-12">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl md:text-4xl font-bold">Frequently asked questions</h2>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                Frequently asked questions
+              </h2>
             </div>
 
             <div className="space-y-6">
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Will this actually get me students?</h3>
+                <h3 className="text-lg font-semibold">
+                  Will this actually get me students?
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  We do not promise guaranteed placement. We reduce wasted effort and increase hit-rate by better filtering, faster applying, and clearer commute fit. You still need to apply and win the assignment—we just make that process less painful.
+                  We do not promise guaranteed placement. We reduce wasted
+                  effort and increase hit-rate by better filtering, faster
+                  applying, and clearer commute fit. You still need to apply and
+                  win the assignment—we just make that process less painful.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Sounds like more overhead. I'm busy.</h3>
+                <h3 className="text-lg font-semibold">
+                  Sounds like more overhead. I'm busy.
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  Set preferences once. Daily shortlist comes to you. Designed for &lt;2 minutes/day. The goal is to save you time, not add work.
+                  Set preferences once. Daily shortlist comes to you. Designed
+                  for &lt;2 minutes/day. The goal is to save you time, not add
+                  work.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">What about privacy? Will you sell my data or share with agencies?</h3>
+                <h3 className="text-lg font-semibold">
+                  What about privacy? Will you sell my data or share with
+                  agencies?
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  <strong>Explicit pledge:</strong> We do not sell your data. We do not share with agencies or tuition centres. Data minimization: we only collect what's needed for the features you use. You control what you share. In beta, we focus on tutor preferences and assignment details—sensitive student info is avoided unless required for a feature you explicitly enable.
+                  <strong>Explicit pledge:</strong> We do not sell your data. We
+                  do not share with agencies or tuition centres. Data
+                  minimization: we only collect what's needed for the features
+                  you use. You control what you share. In beta, we focus on
+                  tutor preferences and assignment details—sensitive student
+                  info is avoided unless required for a feature you explicitly
+                  enable.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Reviews can be unfair.</h3>
+                <h3 className="text-lg font-semibold">
+                  Reviews can be unfair.
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  Verified-only, moderation, right-to-respond, dispute workflow (pilot rules). We're building this carefully to be fair and credible, not a free-for-all.
+                  Verified-only, moderation, right-to-respond, dispute workflow
+                  (pilot rules). We're building this carefully to be fair and
+                  credible, not a free-for-all.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">Agencies already exist. Why is this different?</h3>
+                <h3 className="text-lg font-semibold">
+                  Agencies already exist. Why is this different?
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  Tutor Atlas sits on top of existing channels (Telegram, agencies). You keep your options. We remove friction and increase professionalism. Think of it as a workstation, not a replacement.
+                  Tutor Atlas sits on top of existing channels (Telegram,
+                  agencies). You keep your options. We remove friction and
+                  increase professionalism. Think of it as a workstation, not a
+                  replacement.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold">I run my own centre. I don't apply to Telegram assignments.</h3>
+                <h3 className="text-lg font-semibold">
+                  I run my own centre. I don't apply to Telegram assignments.
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  That's a valid different workflow. We can pilot a <strong>centre-mode track</strong> focused on enquiry capture, scheduling/trials, parent updates, and basic admin. If you still take occasional 1:1 or overflow students, the concierge can also filter for your centre's radius.
+                  That's a valid different workflow. We can pilot a{" "}
+                  <strong>centre-mode track</strong> focused on enquiry capture,
+                  scheduling/trials, parent updates, and basic admin. If you
+                  still take occasional 1:1 or overflow students, the concierge
+                  can also filter for your centre's radius.
                 </p>
               </div>
             </div>
@@ -978,7 +1183,8 @@ export default function Home() {
                     </div>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    * At least one contact method (WhatsApp or Email) is required
+                    * At least one contact method (WhatsApp or Email) is
+                    required
                   </p>
 
                   {/* Telegram Handle */}
@@ -998,7 +1204,9 @@ export default function Home() {
                     <Label htmlFor="teachingFormat">Teaching Format</Label>
                     <Select
                       value={formData.teachingFormat}
-                      onValueChange={(value) => handleSelectChange("teachingFormat", value)}
+                      onValueChange={value =>
+                        handleSelectChange("teachingFormat", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your teaching format" />
@@ -1016,7 +1224,9 @@ export default function Home() {
                     <Label htmlFor="weeklyHours">Weekly Teaching Hours</Label>
                     <Select
                       value={formData.weeklyHours}
-                      onValueChange={(value) => handleSelectChange("weeklyHours", value)}
+                      onValueChange={value =>
+                        handleSelectChange("weeklyHours", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your weekly hours" />
@@ -1036,7 +1246,9 @@ export default function Home() {
                     <Label htmlFor="commuteHours">Weekly Commute Hours</Label>
                     <Select
                       value={formData.commuteHours}
-                      onValueChange={(value) => handleSelectChange("commuteHours", value)}
+                      onValueChange={value =>
+                        handleSelectChange("commuteHours", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select your commute hours" />
@@ -1056,17 +1268,29 @@ export default function Home() {
                     <Label htmlFor="biggestPain">Biggest Pain Point</Label>
                     <Select
                       value={formData.biggestPain}
-                      onValueChange={(value) => handleSelectChange("biggestPain", value)}
+                      onValueChange={value =>
+                        handleSelectChange("biggestPain", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="What frustrates you most?" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Finding suitable assignments">Finding suitable assignments</SelectItem>
-                        <SelectItem value="Travel time between lessons">Travel time between lessons</SelectItem>
-                        <SelectItem value="Repetitive form filling">Repetitive form filling</SelectItem>
-                        <SelectItem value="Getting ghosted after applying">Getting ghosted after applying</SelectItem>
-                        <SelectItem value="Parent coordination and admin">Parent coordination and admin</SelectItem>
+                        <SelectItem value="Finding suitable assignments">
+                          Finding suitable assignments
+                        </SelectItem>
+                        <SelectItem value="Travel time between lessons">
+                          Travel time between lessons
+                        </SelectItem>
+                        <SelectItem value="Repetitive form filling">
+                          Repetitive form filling
+                        </SelectItem>
+                        <SelectItem value="Getting ghosted after applying">
+                          Getting ghosted after applying
+                        </SelectItem>
+                        <SelectItem value="Parent coordination and admin">
+                          Parent coordination and admin
+                        </SelectItem>
                         <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -1086,7 +1310,9 @@ export default function Home() {
 
                   {/* Optional Notes */}
                   <div className="space-y-2">
-                    <Label htmlFor="optionalNotes">Anything else we should know?</Label>
+                    <Label htmlFor="optionalNotes">
+                      Anything else we should know?
+                    </Label>
                     <Textarea
                       id="optionalNotes"
                       name="optionalNotes"
@@ -1103,10 +1329,19 @@ export default function Home() {
                       <Checkbox
                         id="interviewOptIn"
                         checked={formData.interviewOptIn}
-                        onCheckedChange={(checked) => handleCheckboxChange("interviewOptIn", checked as boolean)}
+                        onCheckedChange={checked =>
+                          handleCheckboxChange(
+                            "interviewOptIn",
+                            checked as boolean
+                          )
+                        }
                       />
-                      <Label htmlFor="interviewOptIn" className="text-sm font-normal leading-relaxed cursor-pointer">
-                        I'm open to a 15-30 minute interview to share my workflow and pain points
+                      <Label
+                        htmlFor="interviewOptIn"
+                        className="text-sm font-normal leading-relaxed cursor-pointer"
+                      >
+                        I'm open to a 15-30 minute interview to share my
+                        workflow and pain points
                       </Label>
                     </div>
 
@@ -1114,10 +1349,19 @@ export default function Home() {
                       <Checkbox
                         id="willingnessToPayOptIn"
                         checked={formData.willingnessToPayOptIn}
-                        onCheckedChange={(checked) => handleCheckboxChange("willingnessToPayOptIn", checked as boolean)}
+                        onCheckedChange={checked =>
+                          handleCheckboxChange(
+                            "willingnessToPayOptIn",
+                            checked as boolean
+                          )
+                        }
                       />
-                      <Label htmlFor="willingnessToPayOptIn" className="text-sm font-normal leading-relaxed cursor-pointer">
-                        I'd consider paying for a tool that genuinely saves me time
+                      <Label
+                        htmlFor="willingnessToPayOptIn"
+                        className="text-sm font-normal leading-relaxed cursor-pointer"
+                      >
+                        I'd consider paying for a tool that genuinely saves me
+                        time
                       </Label>
                     </div>
 
@@ -1125,9 +1369,17 @@ export default function Home() {
                       <Checkbox
                         id="receiveUpdates"
                         checked={formData.receiveUpdates}
-                        onCheckedChange={(checked) => handleCheckboxChange("receiveUpdates", checked as boolean)}
+                        onCheckedChange={checked =>
+                          handleCheckboxChange(
+                            "receiveUpdates",
+                            checked as boolean
+                          )
+                        }
                       />
-                      <Label htmlFor="receiveUpdates" className="text-sm font-normal leading-relaxed cursor-pointer">
+                      <Label
+                        htmlFor="receiveUpdates"
+                        className="text-sm font-normal leading-relaxed cursor-pointer"
+                      >
                         Keep me updated on Tutor Atlas progress
                       </Label>
                     </div>
@@ -1145,11 +1397,17 @@ export default function Home() {
 
                   <p className="text-xs text-center text-muted-foreground">
                     By submitting, you agree to our{" "}
-                    <Link href="/privacy" className="underline hover:text-foreground">
+                    <Link
+                      href="/privacy"
+                      className="underline hover:text-foreground"
+                    >
                       Privacy Policy
                     </Link>{" "}
                     and{" "}
-                    <Link href="/terms" className="underline hover:text-foreground">
+                    <Link
+                      href="/terms"
+                      className="underline hover:text-foreground"
+                    >
                       Terms of Use
                     </Link>
                   </p>
@@ -1160,27 +1418,34 @@ export default function Home() {
         </div>
       </section>
 
-
-
       {/* Footer */}
       <footer className="py-12 bg-background border-t">
         <div className="container">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
-              <img 
-                src="/images/tutoratlas_logo_horizontal.png" 
-                alt="Tutor Atlas" 
+              <img
+                src="/images/tutoratlas_logo_horizontal.png"
+                alt="Tutor Atlas"
                 className="h-6"
               />
             </div>
             <div className="flex gap-8 text-sm">
-              <Link href="/privacy" className="hover:text-primary transition-colors">
+              <Link
+                href="/privacy"
+                className="hover:text-primary transition-colors"
+              >
                 Privacy Policy
               </Link>
-              <Link href="/terms" className="hover:text-primary transition-colors">
+              <Link
+                href="/terms"
+                className="hover:text-primary transition-colors"
+              >
                 Terms of Use
               </Link>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-primary transition-colors">
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="hover:text-primary transition-colors"
+              >
                 Contact
               </a>
             </div>

@@ -8,6 +8,13 @@ export const DPO_EMAIL = "hellotutoratlas@gmail.com";
 export const WEBSITE_URL = "https://tutoratlas.manus.space";
 export const EFFECTIVE_DATE = "January 2025";
 
+/**
+ * Google Apps Script Web App URL for form submissions
+ * Deploy from: Extensions → Apps Script → Deploy → New deployment → Web app
+ * Set "Who has access" to "Anyone, even anonymous"
+ */
+export const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZuaLiGcWtfcYb70gT2IW8AMOfyTGwAFg_7S8yVobeGCsvOSTimlzRyXaPHoK8Cj_T/exec";
+
 export const BRAND = {
   name: "Tutor Atlas",
   tagline: "AI workspace for home tutors",
