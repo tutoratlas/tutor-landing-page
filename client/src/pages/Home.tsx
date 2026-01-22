@@ -169,7 +169,7 @@ export default function Home() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
             <img
-              src="images/tutoratlas_logo_horizontal.png"
+              src="/images/tutoratlas_logo_horizontal.png"
               alt="Tutor Atlas"
               className="h-8"
             />
@@ -329,7 +329,7 @@ export default function Home() {
             <div className="relative">
               <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
                 <img
-                  src="images/solution-illustration.jpg"
+                  src="/images/solution-illustration.jpg"
                   alt="Tutor Atlas workspace"
                   className="w-full h-full object-cover"
                 />
@@ -489,7 +489,7 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <div className="w-full max-w-[280px] rounded-xl overflow-hidden shadow-lg">
                     <img
-                      src="images/telegram-blast-screenshot.png"
+                      src="/images/telegram-blast-screenshot.png"
                       alt="Telegram tuition assignment blasts showing 60+ messages"
                       className="w-full h-auto"
                     />
@@ -498,7 +498,7 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <div className="w-full max-w-[280px] rounded-xl overflow-hidden shadow-lg">
                     <img
-                      src="images/google-form-screenshot.png"
+                      src="/images/google-form-screenshot.png"
                       alt="Typical Google Form requiring repetitive data entry"
                       className="w-full h-auto"
                     />
@@ -1398,14 +1398,14 @@ export default function Home() {
                   <p className="text-xs text-center text-muted-foreground">
                     By submitting, you agree to our{" "}
                     <Link
-                      href="/tutor-landing-page/privacy"
+                      href="/privacy"
                       className="underline hover:text-foreground"
                     >
                       Privacy Policy
                     </Link>{" "}
                     and{" "}
                     <Link
-                      href="/tutor-landing-page/terms"
+                      href="/terms"
                       className="underline hover:text-foreground"
                     >
                       Terms of Use
@@ -1424,20 +1424,20 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-2">
               <img
-                src="images/tutoratlas_logo_horizontal.png"
+                src="/images/tutoratlas_logo_horizontal.png"
                 alt="Tutor Atlas"
                 className="h-6"
               />
             </div>
             <div className="flex gap-8 text-sm">
               <Link
-                href="/tutor-landing-page/privacy"
+                href="/privacy"
                 className="hover:text-primary transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="/tutor-landing-page/terms"
+                href="/terms"
                 className="hover:text-primary transition-colors"
               >
                 Terms of Use
