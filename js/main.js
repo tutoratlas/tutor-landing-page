@@ -112,6 +112,7 @@ function serializeForm(form) {
     commuteHours: formData.get("commuteHours")?.toString() || "",
     biggestPain: formData.get("biggestPain")?.toString() || "",
     subjects: formData.get("subjects")?.toString().trim() || "",
+    source: formData.get("source")?.toString() || "",
     optionalNotes: formData.get("optionalNotes")?.toString().trim() || "",
     interviewOptIn: formData.get("interviewOptIn") === "on",
     willingnessToPayOptIn: formData.get("willingnessToPayOptIn") === "on",

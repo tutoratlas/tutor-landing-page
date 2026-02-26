@@ -174,7 +174,7 @@
 
   .form-checkbox {
     appearance: none;
-    @apply relative size-4 shrink-0 rounded border border-input bg-transparent transition-[background-color,border-color] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px];
+    @apply relative size-4 shrink-0 rounded border-2 border-ring bg-transparent transition-[background-color,border-color] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px];
   }
 
   .form-checkbox::after {
