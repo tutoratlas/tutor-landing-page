@@ -33,7 +33,9 @@
 ## 5. Form & External Integrations
 
 - Submission endpoint: `https://script.google.com/macros/s/AKfycbzZuaLiGcWtfcYb70gT2IW8AMOfyTGwAFg_7S8yVobeGCsvOSTimlzRyXaPHoK8Cj_T/exec` (no-CORS POST, `Content-Type: text/plain;charset=utf-8`).
-- Contact details baked into content: `hellotutoratlas@gmail.com`, `https://tutor.tutoratlas.sg`, effective date “January 2025”. Keep these aligned across all pages.
+- Contact details baked into content: `hellotutoratlas@gmail.com`, effective date “January 2025”. Keep these aligned across all pages.
+- Head metadata (canonical, `og:url`, `og:image`, `twitter:image`, JSON-LD `url`/`logo`) uses `https://tutoratlas.github.io/tutor-landing-page/`.
+- The Site definition in the body of `privacy.html` and `terms.html` still reads `https://tutor.tutoratlas.sg`. That is deliberate and pending a separate decision by the repository owner — do not align it with the head metadata without that decision.
 
 ## 6. Icons & Media
 
